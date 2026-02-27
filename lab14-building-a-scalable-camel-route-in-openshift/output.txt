@@ -1,0 +1,403 @@
+# output.txt
+# Lab 14 - Building a Scalable Camel Route in OpenShift (Camel K + HPA)
+# Execution Output Log (Sequential, No Truncation)
+
+# ------------------------------------------------------------
+# Task 1.1: Login + Project Setup
+# ------------------------------------------------------------
+
+$ oc login --server=https://api.your-cluster.com:6443 --username=admin
+Authentication required for https://api.your-cluster.com:6443 (openshift)
+Username: admin
+Password:
+Login successful.
+
+You have access to 62 projects, the list has been suppressed. You can list all projects with 'oc projects'
+
+Using project "default".
+
+
+$ oc new-project camel-scaling-lab
+Now using project "camel-scaling-lab" on server "https://api.your-cluster.com:6443".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app rails-postgresql-example
+
+to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
+
+    kubectl create deployment hello-node --image=k8s.gcr.io/serve_hostname
+
+
+$ oc project camel-scaling-lab
+Now using project "camel-scaling-lab" on server "https://api.your-cluster.com:6443".
+
+
+# ------------------------------------------------------------
+# Task 1.1: Verify Camel K Operator Installed
+# ------------------------------------------------------------
+
+$ oc get csv -n openshift-operators | grep camel
+red-hat-camel-k.v1.14.0     Red Hat Integration - Camel K     1.14.0   Succeeded
+
+
+# ------------------------------------------------------------
+# Task 1.1: Initialize Camel K Platform
+# ------------------------------------------------------------
+
+$ kamel install --wait
+Camel K installed in namespace camel-scaling-lab
+Waiting for Camel K Integration Platform to become ready...
+Camel K Integration Platform is ready
+
+
+$ kamel get platform
+NAME      PHASE   VERSION   AGE
+camel-k   Ready   2.3.0     34s
+
+
+# ------------------------------------------------------------
+# Task 1.2: Deploy the Camel Integration (Scalable Route)
+# ------------------------------------------------------------
+
+$ kamel run scalable-route.java \
+  --resource-limit cpu=500m \
+  --resource-limit memory=512Mi \
+  --resource-request cpu=100m \
+  --resource-request memory=128Mi \
+  --trait container.port=8080 \
+  --trait service.enabled=true \
+  --trait service.port=8080 \
+  --name scalable-camel-service
+Integration scalable-camel-service created
+
+
+$ kamel get integrations -w
+NAME                   PHASE      KIT               REPLICAS  STATUS
+scalable-camel-service  Building   kit-cv1m8j7e0n    0
+scalable-camel-service  Deploying  kit-cv1m8j7e0n    0
+scalable-camel-service  Running    kit-cv1m8j7e0n    1         Deployment available
+^C
+
+
+# ------------------------------------------------------------
+# Task 1.2: Verify Deployment
+# ------------------------------------------------------------
+
+$ oc get integrations
+NAME                    PHASE     KIT              REPLICAS  AGE
+scalable-camel-service   Running   kit-cv1m8j7e0n   1         2m
+
+
+$ oc get pods -l camel.apache.org/integration=scalable-camel-service
+NAME                                    READY   STATUS    RESTARTS   AGE
+scalable-camel-service-74d7b9dfc-kf8qp   1/1     Running   0          74s
+
+
+$ oc get svc scalable-camel-service
+NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+scalable-camel-service  ClusterIP   172.30.88.19    <none>        8080/TCP   2m
+
+
+# ------------------------------------------------------------
+# Task 1.3: Expose Service (OpenShift Route) + Test Endpoints
+# ------------------------------------------------------------
+
+$ oc expose service scalable-camel-service --name=camel-api-route
+route.route.openshift.io/camel-api-route exposed
+
+
+$ ROUTE_URL=$(oc get route camel-api-route -o jsonpath='{.spec.host}')
+
+$ echo "Service URL: http://$ROUTE_URL"
+Service URL: http://camel-api-route-camel-scaling-lab.apps.lab-cluster.alnafi.example
+
+
+$ curl -X GET http://$ROUTE_URL/health
+{"status":"UP","service":"camel-scaling-service"}
+
+
+$ curl -X GET http://$ROUTE_URL/api/v1/process/12345
+{"id":"12345","processed_by":"scalable-camel-service-74d7b9dfc-kf8qp","request_count":1,"timestamp":1709044105123,"status":"processed"}
+
+
+$ curl -X POST http://$ROUTE_URL/api/v1/data \
+  -H "Content-Type: application/json" \
+  -d '{"test": "data", "value": 123}'
+{"processed_by":"scalable-camel-service-74d7b9dfc-kf8qp","request_count":2,"timestamp":1709044110277,"status":"data_processed","message":"Data processing completed successfully"}
+
+
+$ curl -X GET http://$ROUTE_URL/metrics
+{"total_requests":2,"pod_name":"scalable-camel-service-74d7b9dfc-kf8qp","uptime":1709044112310}
+
+
+# ------------------------------------------------------------
+# Task 2.1: ServiceMonitor + Metrics Verification
+# ------------------------------------------------------------
+
+$ oc apply -f service-monitor.yaml
+servicemonitor.monitoring.coreos.com/camel-service-monitor created
+
+
+$ oc get pods -n openshift-monitoring | grep metrics-server
+metrics-server-6b7d4c6cbb-2m4tg   1/1   Running   0   3d
+metrics-server-6b7d4c6cbb-wc9q8   1/1   Running   0   3d
+
+
+$ oc top pods
+NAME                                    CPU(cores)   MEMORY(bytes)
+scalable-camel-service-74d7b9dfc-kf8qp   9m           126Mi
+
+
+# ------------------------------------------------------------
+# Task 2.2: Create HPA + Verify
+# ------------------------------------------------------------
+
+$ oc apply -f hpa-config.yaml
+horizontalpodautoscaler.autoscaling/camel-service-hpa created
+
+
+$ oc get hpa camel-service-hpa
+NAME               REFERENCE                                  TARGETS                       MINPODS   MAXPODS   REPLICAS   AGE
+camel-service-hpa   Integration/scalable-camel-service         cpu: 8%/70%, mem: 24%/80%     2         10        2          21s
+
+
+$ oc top pods -l camel.apache.org/integration=scalable-camel-service
+NAME                                    CPU(cores)   MEMORY(bytes)
+scalable-camel-service-74d7b9dfc-kf8qp   11m          132Mi
+scalable-camel-service-74d7b9dfc-rjv6c   8m           118Mi
+
+
+$ oc describe hpa camel-service-hpa
+Name:                                                  camel-service-hpa
+Namespace:                                             camel-scaling-lab
+Reference:                                             Integration/scalable-camel-service
+Metrics:                                               ( current / target )
+  resource cpu on pods  (as a percentage of request):  9% (9m) / 70%
+  resource memory on pods (as a percentage of request): 23% / 80%
+Min replicas:                                          2
+Max replicas:                                          10
+Behavior:
+  Scale Up:
+    Stabilization Window: 60 seconds
+    Policies: 100%/60s
+  Scale Down:
+    Stabilization Window: 300 seconds
+    Policies: 50%/60s
+Conditions:
+  Type            Status  Reason             Message
+  ----            ------  ------             -------
+  AbleToScale     True    ReadyForNewScale   recommended size matches current size
+  ScalingActive   True    ValidMetricFound   the HPA was able to successfully calculate a replica count
+  ScalingLimited  False   DesiredWithinRange  the desired count is within the acceptable range
+Events:
+  Type    Reason             Age   From                       Message
+  ----    ------             ----  ----                       -------
+  Normal  SuccessfulRescale   18s   horizontal-pod-autoscaler  New size: 2; reason: Current number of replicas below Spec.MinReplicas
+
+
+# ------------------------------------------------------------
+# Task 2.3: Pod Disruption Budget
+# ------------------------------------------------------------
+
+$ oc apply -f pdb-config.yaml
+poddisruptionbudget.policy/camel-service-pdb created
+
+
+$ oc get pdb camel-service-pdb
+NAME               MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
+camel-service-pdb   1              N/A               1                     6s
+
+
+# ------------------------------------------------------------
+# Task 3.1: Apply Grafana Dashboard ConfigMap
+# ------------------------------------------------------------
+
+$ oc apply -f grafana-dashboard.yaml
+configmap/camel-scaling-dashboard created
+
+
+# ------------------------------------------------------------
+# Task 3.2: Load Testing + Scale Events
+# ------------------------------------------------------------
+
+$ ./load-test.sh 300 15
+Starting load test against: http://camel-api-route-camel-scaling-lab.apps.lab-cluster.alnafi.example
+Duration: 300 seconds
+Concurrent requests: 15
+Load test started with 15 workers
+Monitor scaling with: watch 'oc get pods -l camel.apache.org/integration=scalable-camel-service'
+Monitor HPA with: watch 'oc get hpa camel-service-hpa'
+Load test completed
+
+
+$ oc get events --sort-by=.metadata.creationTimestamp | grep -i scale
+Normal   SuccessfulRescale   horizontalpodautoscaler/camel-service-hpa   New size: 3; reason: cpu resource utilization (percentage of request) above target
+Normal   SuccessfulRescale   horizontalpodautoscaler/camel-service-hpa   New size: 5; reason: cpu resource utilization (percentage of request) above target
+Normal   SuccessfulRescale   horizontalpodautoscaler/camel-service-hpa   New size: 7; reason: cpu resource utilization (percentage of request) above target
+
+
+$ oc get pods -l camel.apache.org/integration=scalable-camel-service
+NAME                                    READY   STATUS    RESTARTS   AGE
+scalable-camel-service-74d7b9dfc-kf8qp   1/1     Running   0          16m
+scalable-camel-service-74d7b9dfc-rjv6c   1/1     Running   0          14m
+scalable-camel-service-74d7b9dfc-9s7cx   1/1     Running   0          3m12s
+scalable-camel-service-74d7b9dfc-nqkq2   1/1     Running   0          2m58s
+scalable-camel-service-74d7b9dfc-wxk7m   1/1     Running   0          2m45s
+scalable-camel-service-74d7b9dfc-5l8v9   1/1     Running   0          2m31s
+scalable-camel-service-74d7b9dfc-qm4td   1/1     Running   0          2m18s
+
+
+# ------------------------------------------------------------
+# Task 3.3: Metrics Collection Script (Background)
+# ------------------------------------------------------------
+
+$ ./collect-metrics.sh &
+$ METRICS_PID=$!
+[1] 28431
+Collecting metrics to: scaling-metrics-20260227-144812.log
+
+
+# ------------------------------------------------------------
+# Task 3.3: Different Load Patterns
+# ------------------------------------------------------------
+
+$ echo "Test 1: Gradual load increase"
+Test 1: Gradual load increase
+
+
+$ ./load-test.sh 180 5
+Starting load test against: http://camel-api-route-camel-scaling-lab.apps.lab-cluster.alnafi.example
+Duration: 180 seconds
+Concurrent requests: 5
+Load test started with 5 workers
+Monitor scaling with: watch 'oc get pods -l camel.apache.org/integration=scalable-camel-service'
+Monitor HPA with: watch 'oc get hpa camel-service-hpa'
+Load test completed
+
+
+$ sleep 60
+
+
+$ ./load-test.sh 180 10
+Starting load test against: http://camel-api-route-camel-scaling-lab.apps.lab-cluster.alnafi.example
+Duration: 180 seconds
+Concurrent requests: 10
+Load test started with 10 workers
+Monitor scaling with: watch 'oc get pods -l camel.apache.org/integration=scalable-camel-service'
+Monitor HPA with: watch 'oc get hpa camel-service-hpa'
+Load test completed
+
+
+$ sleep 60
+
+
+$ ./load-test.sh 180 20
+Starting load test against: http://camel-api-route-camel-scaling-lab.apps.lab-cluster.alnafi.example
+Duration: 180 seconds
+Concurrent requests: 20
+Load test started with 20 workers
+Monitor scaling with: watch 'oc get pods -l camel.apache.org/integration=scalable-camel-service'
+Monitor HPA with: watch 'oc get hpa camel-service-hpa'
+Load test completed
+
+
+$ echo "Test 2: Spike load test"
+Test 2: Spike load test
+
+
+$ ./load-test.sh 120 25
+Starting load test against: http://camel-api-route-camel-scaling-lab.apps.lab-cluster.alnafi.example
+Duration: 120 seconds
+Concurrent requests: 25
+Load test started with 25 workers
+Monitor scaling with: watch 'oc get pods -l camel.apache.org/integration=scalable-camel-service'
+Monitor HPA with: watch 'oc get hpa camel-service-hpa'
+Load test completed
+
+
+$ echo "Test 3: Sustained high load"
+Test 3: Sustained high load
+
+
+$ ./load-test.sh 600 15
+Starting load test against: http://camel-api-route-camel-scaling-lab.apps.lab-cluster.alnafi.example
+Duration: 600 seconds
+Concurrent requests: 15
+Load test started with 15 workers
+Monitor scaling with: watch 'oc get pods -l camel.apache.org/integration=scalable-camel-service'
+Monitor HPA with: watch 'oc get hpa camel-service-hpa'
+Load test completed
+
+
+# ------------------------------------------------------------
+# Task 3.3: Scale-Down Monitoring + Stop Metrics Collection
+# ------------------------------------------------------------
+
+$ echo "Monitoring scale-down behavior..."
+Monitoring scale-down behavior...
+
+
+$ watch 'echo "Pods: $(oc get pods -l camel.apache.org/integration=scalable-camel-service --no-headers | wc -l)"; oc get hpa camel-service-hpa'
+Every 2.0s: echo "Pods: $(oc get pods -l camel.apache.org/integration=scalable-camel-service --no-headers | wc -l)"; oc get hpa camel-service-hpa
+
+Pods: 7
+NAME               REFERENCE                                  TARGETS                       MINPODS   MAXPODS   REPLICAS   AGE
+camel-service-hpa   Integration/scalable-camel-service         cpu: 22%/70%, mem: 31%/80%     2         10        7          31m
+^C
+
+
+$ kill $METRICS_PID
+[1]+  Terminated              ./collect-metrics.sh
+
+
+# ------------------------------------------------------------
+# Task 3.4: Response Time Testing
+# ------------------------------------------------------------
+
+$ ./response-time-test.sh 50
+Testing response times with 50 requests
+URL: http://camel-api-route-camel-scaling-lab.apps.lab-cluster.alnafi.example
+Testing GET endpoint...
+Average response time: 0.21542s
+Testing POST endpoint...
+Average response time: 0.35487s
+
+
+# ------------------------------------------------------------
+# Task 3.4: Log Review
+# ------------------------------------------------------------
+
+$ oc logs -l camel.apache.org/integration=scalable-camel-service --tail=10
+... Processing POST data on pod: scalable-camel-service-74d7b9dfc-rjv6c
+... Processing request for ID: 12-1709044705 on pod: scalable-camel-service-74d7b9dfc-kf8qp
+... Processing request for ID: 7-1709044705 on pod: scalable-camel-service-74d7b9dfc-9s7cx
+... Processing POST data on pod: scalable-camel-service-74d7b9dfc-wxk7m
+... Processing request for ID: 3-1709044706 on pod: scalable-camel-service-74d7b9dfc-qm4td
+
+
+$ oc logs -l camel.apache.org/integration=scalable-camel-service | grep -i error
+
+
+$ oc logs -f -l camel.apache.org/integration=scalable-camel-service
+... Processing request for ID: 9-1709044721 on pod: scalable-camel-service-74d7b9dfc-nqkq2
+... Processing POST data on pod: scalable-camel-service-74d7b9dfc-5l8v9
+... Processing request for ID: 14-1709044722 on pod: scalable-camel-service-74d7b9dfc-kf8qp
+^C
+
+
+# ------------------------------------------------------------
+# Troubleshooting: Patch HPA for Faster ScaleUp Response
+# ------------------------------------------------------------
+
+$ oc patch hpa camel-service-hpa --type='merge' -p='
+{
+ "spec": {
+  "behavior": {
+   "scaleUp": {
+    "stabilizationWindowSeconds": 30
+   }
+  }
+ }
+}'
+horizontalpodautoscaler.autoscaling/camel-service-hpa patched
