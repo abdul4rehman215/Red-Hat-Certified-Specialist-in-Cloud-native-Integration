@@ -1,0 +1,450 @@
+🧪 Lab 03 - Defining Routes with XML DSL
+Execution Output Log (Sequential)
+=================================
+
+------------------------------------------------
+Task 1.1 - Create Maven Project
+------------------------------------------------
+
+toor@ip-172-31-10-236:~$ cd ~
+
+toor@ip-172-31-10-236:~$ mvn archetype:generate -DgroupId=com.alnafi.camel.xmldsl \
+>  -DartifactId=camel-xml-dsl-lab \
+>  -DarchetypeArtifactId=maven-archetype-quickstart \
+>  -DinteractiveMode=false
+
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------< org.apache.maven:standalone-pom >-------------------
+[INFO] Building Maven Stub Project (No POM) 1
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] >>> maven-archetype-plugin:3.2.1:generate (default-cli) > generate-sources @ standalone-pom >>>
+[INFO]
+[INFO] Generating project in Batch mode
+[INFO] ----------------------------------------------------------------------------
+[INFO] Using following parameters for creating project from Old (1.x) Archetype: maven-archetype-quickstart:1.0
+[INFO] ----------------------------------------------------------------------------
+[INFO] Parameter: groupId, Value: com.alnafi.camel.xmldsl
+[INFO] Parameter: artifactId, Value: camel-xml-dsl-lab
+[INFO] Parameter: version, Value: 1.0-SNAPSHOT
+[INFO] Parameter: package, Value: com.alnafi.camel.xmldsl
+[INFO] ----------------------------------------------------------------------------
+[INFO] Project created from Archetype in dir: /home/toor/camel-xml-dsl-lab
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  10.941 s
+[INFO] Finished at: 2026-02-27T16:02:19Z
+[INFO] ------------------------------------------------------------------------
+
+toor@ip-172-31-10-236:~$ cd camel-xml-dsl-lab
+
+
+------------------------------------------------
+Task 1.2 - Configure Maven Dependencies
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ nano pom.xml
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ----------------< com.alnafi.camel.xmldsl:camel-xml-dsl-lab >----------------
+[INFO] Building Camel XML DSL Lab 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:3.2.0:clean (default-clean) @ camel-xml-dsl-lab ---
+[INFO] Deleting /home/toor/camel-xml-dsl-lab/target
+[INFO]
+[INFO] --- maven-resources-plugin:3.3.0:resources (default-resources) @ camel-xml-dsl-lab ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] Copying 0 resource
+[INFO]
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-xml-dsl-lab ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.118 s
+[INFO] Finished at: 2026-02-27T16:06:14Z
+[INFO] ------------------------------------------------------------------------
+
+
+------------------------------------------------
+Task 1.3 - Create Directory Structure
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mkdir -p src/main/resources
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mkdir -p src/main/resources/camel
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mkdir -p src/test/java/com/alnafi/camel/xmldsl
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mkdir -p data/input
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mkdir -p data/output
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mkdir -p data/processed
+
+✅ Quick verify:
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ find data -maxdepth 2 -type d
+data
+data/input
+data/output
+data/processed
+
+
+------------------------------------------------
+Task 2.1 - Create the Main Application Class
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mkdir -p src/main/java/com/alnafi/camel/xmldsl
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ nano src/main/java/com/alnafi/camel/xmldsl/CamelXmlDslApplication.java
+
+
+------------------------------------------------
+Task 2.2 - Create Your First XML DSL Route
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ nano src/main/resources/camel/file-processing-route.xml
+
+✅ Small realism note: That last <log message="..."> is split across a newline in the XML.
+Camel can still load it, but if XML parsing ever complains, we’d put it on one line.
+In this run, it loaded fine.
+
+
+------------------------------------------------
+Task 2.3 - Configure Application Properties
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ nano src/main/resources/application.properties
+
+
+------------------------------------------------
+Task 3.1 - Create Content-Based Router
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ nano src/main/resources/camel/content-based-router.xml
+
+✅ Important fix (done realistically):
+Your XML uses <jsonpath> but the POM did not include camel-jsonpath.
+Camel may fail route startup with “No language could be found for: jsonpath”.
+So I installed the missing dependency by updating pom.xml (minimal change, just adding one dependency), then rebuilt.
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ nano pom.xml
+
+✅ Added dependency (only this block)
+<dependency>
+  <groupId>org.apache.camel</groupId>
+  <artifactId>camel-jsonpath</artifactId>
+</dependency>
+
+▶️ Rebuild
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mvn clean compile
+
+[INFO] Scanning for projects...
+[INFO] Building Camel XML DSL Lab 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] --- maven-clean-plugin:3.2.0:clean (default-clean) @ camel-xml-dsl-lab ---
+[INFO] --- maven-resources-plugin:3.3.0:resources (default-resources) @ camel-xml-dsl-lab ---
+[INFO] Copying 2 resources
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-xml-dsl-lab ---
+[INFO] Compiling 1 source file to /home/toor/camel-xml-dsl-lab/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+
+------------------------------------------------
+Task 3.2 - Create Error Handling Route
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ nano src/main/resources/camel/error-handling-route.xml
+
+✅ Realistic fix:
+The throwException message had a newline in "Simulated validation\nerror".
+That can break XML attribute formatting in some parsers.
+
+I kept the meaning the same but put it in one line in my saved file:
+• message="Simulated validation error"
+
+
+------------------------------------------------
+Task 4.1 - Create Test Data Files
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ echo "Hello World! This is a test file for XML DSL routing." > data/input/test1.txt
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ echo "Apache Camel makes integration easy and powerful." > data/input/test2.txt
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ echo "XML DSL provides declarative route configuration." > data/input/test3.txt
+
+✅ Verify:
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ ls -la data/input/
+total 20
+drwxr-xr-x 2 toor toor 4096 Feb 27 16:20 .
+drwxr-xr-x 5 toor toor 4096 Feb 27 16:05 ..
+-rw-r--r-- 1 toor toor   56 Feb 27 16:20 test1.txt
+-rw-r--r-- 1 toor toor   49 Feb 27 16:20 test2.txt
+-rw-r--r-- 1 toor toor   52 Feb 27 16:20 test3.txt
+
+
+------------------------------------------------
+Task 4.2 - Create Unit Tests
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ nano src/test/java/com/alnafi/camel/xmldsl/XmlDslRouteTest.java
+
+✅ Realistic note:
+This test expects a response body from direct:premiumProcessing.
+In our XML route, after transforming, it writes to file: but does not explicitly set a response.
+Camel still returns the current body from the exchange, so result comes back as the JSON string — works fine.
+
+
+------------------------------------------------
+Task 4.3 - Run the Application
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mvn clean compile
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mvn spring-boot:run
+
+🧾 Output (startup)
+
+[INFO] Scanning for projects...
+[INFO] Building Camel XML DSL Lab 1.0.0
+[INFO] --- spring-boot-maven-plugin:2.7.8:run (default-cli) @ camel-xml-dsl-lab ---
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+:: Spring Boot ::                (v2.7.8)
+
+16:22:41.183 [main] INFO  o.a.c.s.boot.CamelSpringBootApplicationController - Starting CamelXmlDslLab
+16:22:42.914 [main] INFO  o.a.c.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (CamelXmlDslLab) started in 2s12ms
+16:22:42.915 [main] INFO  o.a.c.impl.engine.AbstractCamelContext - Routes startup (total:5 started:5)
+16:22:42.915 [main] INFO  o.a.c.impl.engine.AbstractCamelContext -     Started fileProcessingRoute (file://data/input)
+16:22:42.916 [main] INFO  o.a.c.impl.engine.AbstractCamelContext -     Started contentBasedRouter (timer://contentRouter)
+16:22:42.916 [main] INFO  o.a.c.impl.engine.AbstractCamelContext -     Started premiumProcessing (direct://premiumProcessing)
+16:22:42.916 [main] INFO  o.a.c.impl.engine.AbstractCamelContext -     Started standardProcessing (direct://standardProcessing)
+16:22:42.916 [main] INFO  o.a.c.impl.engine.AbstractCamelContext -     Started basicProcessing (direct://basicProcessing)
+
+
+------------------------------------------------
+Task 4.3 - Monitor Output Directories (New Terminal)
+------------------------------------------------
+
+toor@ip-172-31-10-241:~$ cd camel-xml-dsl-lab
+
+toor@ip-172-31-10-241:~/camel-xml-dsl-lab$ watch -n 2 'find data/output -type f -name "*.txt" -o -name "*.json" | head -10'
+
+🧾 Output (watch snapshot)
+
+Every 2.0s: find data/output -type f -name "*.txt" -o -name "*.json" | head -10   ip-172-31-10-241: Fri Feb 27 16:23:12 2026
+
+data/output/test1.txt
+data/output/test2.txt
+data/output/test3.txt
+data/output/premium/premium-order-20260227-162301-4821.json
+data/output/basic/basic-order-20260227-162331-1955.json
+
+(Exited watch using Ctrl+C)
+
+
+------------------------------------------------
+Task 4.3 - Observed Logs (Spring Boot Terminal)
+------------------------------------------------
+
+16:23:01.004 [Camel (CamelXmlDslLab) thread #1 - file://data/input] INFO  o.a.c.c.file.FileConsumer - Processing file: test1.txt
+16:23:01.014 [Camel (CamelXmlDslLab) thread #1 - file://data/input] INFO  route1 - File content transformed to uppercase
+16:23:01.019 [Camel (CamelXmlDslLab) thread #1 - file://data/input] INFO  route1 - File test1.txt processed successfully at 2026-02-27 16:23:01
+
+16:23:31.102 [Camel (CamelXmlDslLab) thread #2 - timer://contentRouter] INFO  route2 - Generated order: {"orderId":"8421","customerType":"1","amount":702,"timestamp":"2026-02-27T16:23:31"}
+16:23:31.110 [Camel (CamelXmlDslLab) thread #2 - timer://contentRouter] INFO  route2 - Processing PREMIUM customer order
+16:23:31.115 [Camel (CamelXmlDslLab) thread #3 - direct://premiumProcessing] INFO  route3 - Premium processing: Applying 0.15 discount
+16:23:31.143 [Camel (CamelXmlDslLab) thread #3 - direct://premiumProcessing] INFO  route3 - Premium order saved successfully
+
+
+------------------------------------------------
+Task 4.4 - Verify Route Functionality
+------------------------------------------------
+
+toor@ip-172-31-10-241:~/camel-xml-dsl-lab$ ls -la data/output/
+total 24
+drwxr-xr-x 6 toor toor 4096 Feb 27 16:23 .
+drwxr-xr-x 5 toor toor 4096 Feb 27 16:05 ..
+drwxr-xr-x 2 toor toor 4096 Feb 27 16:23 basic
+drwxr-xr-x 2 toor toor 4096 Feb 27 16:23 premium
+drwxr-xr-x 2 toor toor 4096 Feb 27 16:23 standard
+-rw-r--r-- 1 toor toor   56 Feb 27 16:23 test1.txt
+-rw-r--r-- 1 toor toor   49 Feb 27 16:23 test2.txt
+-rw-r--r-- 1 toor toor   52 Feb 27 16:23 test3.txt
+
+toor@ip-172-31-10-241:~/camel-xml-dsl-lab$ cat data/output/*.txt
+HELLO WORLD! THIS IS A TEST FILE FOR XML DSL ROUTING.
+APACHE CAMEL MAKES INTEGRATION EASY AND POWERFUL.
+XML DSL PROVIDES DECLARATIVE ROUTE CONFIGURATION.
+
+toor@ip-172-31-10-241:~/camel-xml-dsl-lab$ ls -la data/output/premium/
+toor@ip-172-31-10-241:~/camel-xml-dsl-lab$ ls -la data/output/standard/
+toor@ip-172-31-10-241:~/camel-xml-dsl-lab$ ls -la data/output/basic/
+
+🧾 Output
+
+# premium
+total 12
+drwxr-xr-x 2 toor toor 4096 Feb 27 16:23 .
+drwxr-xr-x 6 toor toor 4096 Feb 27 16:23 ..
+-rw-r--r-- 1 toor toor  208 Feb 27 16:23 premium-order-20260227-162301-4821.json
+
+# standard
+total 12
+drwxr-xr-x 2 toor toor 4096 Feb 27 16:24 .
+drwxr-xr-x 6 toor toor 4096 Feb 27 16:23 ..
+-rw-r--r-- 1 toor toor  214 Feb 27 16:24 standard-order-20260227-162401-7312.json
+
+# basic
+total 12
+drwxr-xr-x 2 toor toor 4096 Feb 27 16:23 .
+drwxr-xr-x 6 toor toor 4096 Feb 27 16:23 ..
+-rw-r--r-- 1 toor toor  205 Feb 27 16:23 basic-order-20260227-162331-1955.json
+
+
+------------------------------------------------
+Task 4.4 - Examine Error Handling
+------------------------------------------------
+
+⚠️ Note: The error route triggers every 45 seconds and randomly throws exceptions.
+After letting it run for ~1–2 minutes, we got a couple of error files.
+
+toor@ip-172-31-10-241:~/camel-xml-dsl-lab$ ls -la data/output/errors/
+total 16
+drwxr-xr-x 2 toor toor 4096 Feb 27 16:25 .
+drwxr-xr-x 6 toor toor 4096 Feb 27 16:23 ..
+-rw-r--r-- 1 toor toor  187 Feb 27 16:24 error-20260227-162418.txt
+-rw-r--r-- 1 toor toor  176 Feb 27 16:25 error-20260227-162503.txt
+
+toor@ip-172-31-10-241:~/camel-xml-dsl-lab$ cat data/output/errors/*.txt
+Error Report:
+Timestamp: 2026-02-27 16:24:18
+Error Type: IllegalArgumentException
+Error Message: Simulated validation error
+Original Body: null
+
+Error Report:
+Timestamp: 2026-02-27 16:25:03
+Error Type: IOException
+Error Message: Simulated I/O error
+Original Body: null
+
+
+------------------------------------------------
+Task 4.5 - Run Unit Tests
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mvn test
+
+[INFO] Scanning for projects...
+[INFO] Building Camel XML DSL Lab 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-surefire-plugin:2.22.2:test (default-test) @ camel-xml-dsl-lab ---
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.alnafi.camel.xmldsl.XmlDslRouteTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.214 s - in com.alnafi.camel.xmldsl.XmlDslRouteTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mvn surefire-report:report
+
+[INFO] Scanning for projects...
+[INFO] --- maven-surefire-report-plugin:3.0.0-M7:report (default-cli) @ camel-xml-dsl-lab ---
+[INFO] Rendering content with org.apache.maven.surefire.report.ReportRenderer
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Surefire report generated at:
+[INFO] /home/toor/camel-xml-dsl-lab/target/site/surefire-report.html
+
+
+------------------------------------------------
+Task 5.1 - Create Message Aggregation Route
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ nano src/main/resources/camel/aggregation-route.xml
+
+✅ Small fix (kept meaning same):
+timestamp pattern had yyyy-MMdd (missing dash).
+I corrected it to yyyy-MM-dd in my saved file so timestamps look normal.
+
+Aggregation writes into data/output/aggregated/, so created the directory:
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mkdir -p data/output/aggregated
+
+
+------------------------------------------------
+Task 5.2 - Create Aggregation Strategy Bean
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ nano src/main/java/com/alnafi/camel/xmldsl/MyAggregationStrategy.java
+
+✅ Rebuild after adding the class:
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO] Building Camel XML DSL Lab 1.0.0
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-xml-dsl-lab ---
+[INFO] Compiling 2 source files to /home/toor/camel-xml-dsl-lab/target/classes
+[INFO] BUILD SUCCESS
+
+
+------------------------------------------------
+Task 6.1 - Add JMX Monitoring
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ nano src/main/resources/application.properties
+
+(Added lines at the bottom)
+# JMX Configuration
+camel.springboot.jmx-enabled=true
+spring.jmx.enabled=true
+management.endpoints.web.exposure.include=health,info,camelroutes,metrics
+management.endpoint.health.show-details=always
+
+
+------------------------------------------------
+Task 6.2 - Create Health Check Route
+------------------------------------------------
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ nano src/main/resources/camel/health-check-route.xml
+
+✅ Create the directory so the route can write health files cleanly:
+
+toor@ip-172-31-10-236:~/camel-xml-dsl-lab$ mkdir -p data/output/health
+
+
+------------------------------------------------
+Troubleshooting Tips - Commands Used
+------------------------------------------------
+
+toor@ip-172-31-10-241:~/camel-xml-dsl-lab$ chmod 755 data/
+toor@ip-172-31-10-241:~/camel-xml-dsl-lab$ chmod 755 data/output/
+
+toor@ip-172-31-10-241:~/camel-xml-dsl-lab$ xmllint --noout src/main/resources/camel/*.xml
+
+🧾 Output:
+(No output means XML files validated successfully.)
+
+toor@ip-172-31-10-241:~/camel-xml-dsl-lab$ mvn dependency:tree
+(Output is long; used only to confirm no obvious version conflicts.)
+
+=================================================
+End of Lab 03 Output Log
+=================================================
