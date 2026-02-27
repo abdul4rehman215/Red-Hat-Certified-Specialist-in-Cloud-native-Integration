@@ -1,0 +1,11 @@
+# manifests/pdb-config.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: camel-service-pdb
+  namespace: camel-scaling-lab
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      camel.apache.org/integration: scalable-camel-service
