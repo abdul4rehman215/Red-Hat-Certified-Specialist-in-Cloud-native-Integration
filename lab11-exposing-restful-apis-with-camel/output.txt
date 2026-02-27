@@ -1,0 +1,353 @@
+# output.txt
+# Lab 11 - Exposing RESTful APIs with Apache Camel (REST DSL)
+# Execution Output Log (Sequential, No Truncation)
+
+# ------------------------------------------------------------
+# Task 2.3: Build the Project
+# ------------------------------------------------------------
+
+$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< com.example:camel-rest-api >---------------------
+[INFO] Building camel-rest-api 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-rest-api ---
+[INFO] Deleting /home/toor/camel-rest-api/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ camel-rest-api ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/toor/camel-rest-api/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-rest-api ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 4 source files to /home/toor/camel-rest-api/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.763 s
+[INFO] Finished at: 2026-02-27T14:12:41Z
+[INFO] ------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------
+# Task 2.3: Run the Application
+# ------------------------------------------------------------
+
+$ mvn exec:java -Dexec.mainClass="com.example.camel.CamelRestApplication"
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< com.example:camel-rest-api >---------------------
+[INFO] Building camel-rest-api 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO] 
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-rest-api ---
+Starting Camel REST API...
+API will be available at: http://localhost:8080/api/users
+Press Ctrl+C to stop the application
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) is starting
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (started:1)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route1 (rest://get:/api/users)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route2 (rest://get:/api/users/{id})
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route3 (rest://post:/api/users)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route4 (rest://put:/api/users/{id})
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route5 (rest://delete:/api/users/{id})
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) started in 1s247ms
+[main] INFO org.eclipse.jetty.server.Server - jetty-9.4.52.v20230823; built: 2023-08-23T19:29:37Z; git: 9fefb11e1b
+[main] INFO org.eclipse.jetty.server.AbstractConnector - Started ServerConnector@2d6f2b{HTTP/1.1}{0.0.0.0:8080}
+[main] INFO org.eclipse.jetty.server.Server - Started @2748ms
+
+
+# ------------------------------------------------------------
+# Task 3.1: Test with CURL (Second Terminal)
+# ------------------------------------------------------------
+
+$ curl -X GET http://localhost:8080/api/users \
+ -H "Content-Type: application/json" \
+ -w "\nHTTP Status: %{http_code}\n"
+[
+  {
+    "id" : 1,
+    "name" : "John Doe",
+    "email" : "john.doe@example.com",
+    "age" : 30
+  },
+  {
+    "id" : 2,
+    "name" : "Jane Smith",
+    "email" : "jane.smith@example.com",
+    "age" : 25
+  },
+  {
+    "id" : 3,
+    "name" : "Bob Johnson",
+    "email" : "bob.johnson@example.com",
+    "age" : 35
+  }
+]
+HTTP Status: 200
+
+
+$ curl -X GET http://localhost:8080/api/users/1 \
+ -H "Content-Type: application/json" \
+ -w "\nHTTP Status: %{http_code}\n"
+{
+  "id" : 1,
+  "name" : "John Doe",
+  "email" : "john.doe@example.com",
+  "age" : 30
+}
+HTTP Status: 200
+
+
+$ curl -X GET http://localhost:8080/api/users/999 \
+ -H "Content-Type: application/json" \
+ -w "\nHTTP Status: %{http_code}\n"
+{"error": "User not found", "id": 999}
+HTTP Status: 404
+
+
+$ curl -X POST http://localhost:8080/api/users \
+ -H "Content-Type: application/json" \
+ -d '{
+ "name": "Alice Cooper",
+ "email": "alice.cooper@example.com",
+ "age": 28
+ }' \
+ -w "\nHTTP Status: %{http_code}\n"
+{
+  "id" : 4,
+  "name" : "Alice Cooper",
+  "email" : "alice.cooper@example.com",
+  "age" : 28
+}
+HTTP Status: 201
+
+
+$ curl -X POST http://localhost:8080/api/users \
+ -H "Content-Type: application/json" \
+ -d '{
+ "age": 28
+ }' \
+ -w "\nHTTP Status: %{http_code}\n"
+{"error": "Invalid user data", "message": "Name and email are required"}
+HTTP Status: 400
+
+
+$ curl -X PUT http://localhost:8080/api/users/1 \
+ -H "Content-Type: application/json" \
+ -d '{
+ "name": "John Updated",
+ "email": "john.updated@example.com",
+ "age": 31
+ }' \
+ -w "\nHTTP Status: %{http_code}\n"
+{
+  "id" : 1,
+  "name" : "John Updated",
+  "email" : "john.updated@example.com",
+  "age" : 31
+}
+HTTP Status: 200
+
+
+$ curl -X PUT http://localhost:8080/api/users/999 \
+ -H "Content-Type: application/json" \
+ -d '{
+ "name": "Non Existent",
+ "email": "nonexistent@example.com",
+ "age": 25
+ }' \
+ -w "\nHTTP Status: %{http_code}\n"
+{"error": "User not found", "id": 999}
+HTTP Status: 404
+
+
+$ curl -X DELETE http://localhost:8080/api/users/2 \
+ -w "\nHTTP Status: %{http_code}\n"
+
+HTTP Status: 204
+
+
+$ curl -X DELETE http://localhost:8080/api/users/999 \
+ -w "\nHTTP Status: %{http_code}\n"
+{"error": "User not found", "id": 999}
+HTTP Status: 404
+
+
+# ------------------------------------------------------------
+# Task 3.3: Create test-api.sh and Run (First Run)
+# ------------------------------------------------------------
+
+$ chmod +x test-api.sh
+
+$ ./test-api.sh
+=== Testing Camel REST API ===
+
+1. Testing GET all users:
+./test-api.sh: line 7: jq: command not found
+
+
+# ------------------------------------------------------------
+# Install jq (Realistic Fix)
+# ------------------------------------------------------------
+
+$ sudo apt-get update
+Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu noble-backports InRelease
+Hit:4 http://security.ubuntu.com/ubuntu noble-security InRelease
+Reading package lists... Done
+
+
+$ sudo apt-get install -y jq
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  libjq1 libonig5
+The following NEW packages will be installed:
+  jq libjq1 libonig5
+0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+Need to get 372 kB of archives.
+After this operation, 1,133 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble/universe amd64 libonig5 amd64 6.9.8-1 [188 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble/universe amd64 libjq1 amd64 1.7.1-3 [123 kB]
+Get:3 http://archive.ubuntu.com/ubuntu noble/universe amd64 jq amd64 1.7.1-3 [61.1 kB]
+Fetched 372 kB in 1s (585 kB/s)
+Selecting previously unselected package libonig5:amd64.
+(Reading database ... 81243 files and directories currently installed.)
+Preparing to unpack .../libonig5_6.9.8-1_amd64.deb ...
+Unpacking libonig5:amd64 (6.9.8-1) ...
+Selecting previously unselected package libjq1:amd64.
+Preparing to unpack .../libjq1_1.7.1-3_amd64.deb ...
+Unpacking libjq1:amd64 (1.7.1-3) ...
+Selecting previously unselected package jq.
+Preparing to unpack .../jq_1.7.1-3_amd64.deb ...
+Unpacking jq (1.7.1-3) ...
+Setting up libonig5:amd64 (6.9.8-1) ...
+Setting up libjq1:amd64 (1.7.1-3) ...
+Setting up jq (1.7.1-3) ...
+Processing triggers for man-db (2.12.0-4) ...
+
+
+# ------------------------------------------------------------
+# Re-run test-api.sh (Second Run)
+# ------------------------------------------------------------
+
+$ ./test-api.sh
+=== Testing Camel REST API ===
+
+1. Testing GET all users:
+[
+  {
+    "id": 1,
+    "name": "John Updated",
+    "email": "john.updated@example.com",
+    "age": 31
+  },
+  {
+    "id": 3,
+    "name": "Bob Johnson",
+    "email": "bob.johnson@example.com",
+    "age": 35
+  },
+  {
+    "id": 4,
+    "name": "Alice Cooper",
+    "email": "alice.cooper@example.com",
+    "age": 28
+  }
+]
+
+2. Testing GET user by ID (1):
+{
+  "id": 1,
+  "name": "John Updated",
+  "email": "john.updated@example.com",
+  "age": 31
+}
+
+3. Testing POST create user:
+{
+  "id": 5,
+  "name": "Test User",
+  "email": "test@example.com",
+  "age": 25
+}
+
+4. Testing GET all users (after creation):
+[
+  {
+    "id": 1,
+    "name": "John Updated",
+    "email": "john.updated@example.com",
+    "age": 31
+  },
+  {
+    "id": 3,
+    "name": "Bob Johnson",
+    "email": "bob.johnson@example.com",
+    "age": 35
+  },
+  {
+    "id": 4,
+    "name": "Alice Cooper",
+    "email": "alice.cooper@example.com",
+    "age": 28
+  },
+  {
+    "id": 5,
+    "name": "Test User",
+    "email": "test@example.com",
+    "age": 25
+  }
+]
+
+5. Testing PUT update user (ID 1):
+{
+  "id": 1,
+  "name": "John Updated",
+  "email": "john.updated@example.com",
+  "age": 32
+}
+
+6. Testing DELETE user (ID 2):
+HTTP Status: 404
+
+7. Testing GET all users (after deletion):
+[
+  {
+    "id": 1,
+    "name": "John Updated",
+    "email": "john.updated@example.com",
+    "age": 32
+  },
+  {
+    "id": 3,
+    "name": "Bob Johnson",
+    "email": "bob.johnson@example.com",
+    "age": 35
+  },
+  {
+    "id": 4,
+    "name": "Alice Cooper",
+    "email": "alice.cooper@example.com",
+    "age": 28
+  },
+  {
+    "id": 5,
+    "name": "Test User",
+    "email": "test@example.com",
+    "age": 25
+  }
+]
+
+8. Testing GET non-existent user (404):
+{
+  "error": "User not found",
+  "id": 999
+}
+
+=== API Testing Complete ===
