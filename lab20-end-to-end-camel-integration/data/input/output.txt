@@ -1,0 +1,78 @@
+Synchronizing state of postgresql.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable postgresql
+
+CREATE DATABASE
+CREATE ROLE
+GRANT
+
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+INSERT 0 3
+INSERT 0 5
+
+[INFO] Scanning for projects...
+[INFO] ----------------< com.alnafi:camel-integration-lab >----------------
+[INFO] Building camel-integration-lab 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-integration-lab ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 7 source files to /home/toor/camel-integration-lab/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+Starting End-to-End Integration Application...
+- Watching: data/input for CSV orders
+- Writing reports: data/output
+- Processed files: data/processed
+- Errors: data/error
+- Inventory API: http://localhost:8080/inventory/check?productCode=PROD001
+- MQ Broker: tcp://localhost:61616
+Press Ctrl+C to stop
+[INFO] ... Database configured successfully
+[INFO] ... Inventory service simulator started on port 8080
+[INFO] ... Routes startup (total:?? started:??)
+[order-file-processor] INFO order-file-processor - Started route order-file-processor
+[priority-notification-consumer] INFO priority-notification-consumer - Started route priority-notification-consumer
+[standard-notification-consumer] INFO standard-notification-consumer - Started route standard-notification-consumer
+
+total 20
+drwxrwxr-x 2 toor toor 4096 Feb 27 18:21 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 18:12 ..
+-rw-rw-r-- 1 toor toor  356 Feb 27 18:21 order_1001_confirmation.txt
+-rw-rw-r-- 1 toor toor   64 Feb 27 18:21 notification_20260227_182121.txt
+-rw-rw-r-- 1 toor toor   64 Feb 27 18:21 mq_standard_20260227_182121123.txt
+
+ORDER CONFIRMATION
+==================
+Order Number: 1001
+Customer: Tech Solutions Inc
+Email: orders@techsolutions.com
+Total Amount: $189.97
+Status: PROCESSED
+
+ITEMS:
+- PROD001 (Wireless Mouse) x2 @ $29.99 = $59.98
+- PROD002 (USB Keyboard) x1 @ $49.99 = $49.99
+- PROD003 (Monitor Stand) x1 @ $79.99 = $79.99
+
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 18:21 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 18:12 ..
+-rw-rw-r-- 1 toor toor  134 Feb 27 18:21 order_1001.csv
+
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 18:23 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 18:12 ..
+-rw-rw-r-- 1 toor toor   82 Feb 27 18:23 order_bad.csv
+
+WARN ... Redelivery attempt: 1 due to Product not found: PROD999
+WARN ... Redelivery attempt: 2 due to Product not found: PROD999
+WARN ... Redelivery attempt: 3 due to Product not found: PROD999
+ERROR ... Exhausted after delivery attempt: 3 caught: java.lang.IllegalStateException: Product not found: PROD999
+
+[INFO] ... Inventory service simulator stopped
+[INFO] ... Broker stopped
+[INFO] ... Camel stopped
