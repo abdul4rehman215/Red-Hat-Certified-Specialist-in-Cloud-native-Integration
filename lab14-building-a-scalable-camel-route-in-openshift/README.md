@@ -8,14 +8,6 @@
 
 ---
 
-## 📌 Folder Name
-
-```text
-lab14-building-a-scalable-camel-route-in-openshift/
-````
-
----
-
 ## 🧱 Repository Structure (Lab Format)
 
 ```text id="7o9ra3"
