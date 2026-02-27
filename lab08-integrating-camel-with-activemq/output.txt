@@ -1,0 +1,365 @@
+toor@ip-172-31-10-206:~$ cd ~
+toor@ip-172-31-10-206:~$ pwd
+/home/toor
+
+toor@ip-172-31-10-206:~$ ls -la /opt/activemq* 2>/dev/null || echo "ActiveMQ not found in /opt"
+ActiveMQ not found in /opt
+
+toor@ip-172-31-10-206:~$ wget https://archive.apache.org/dist/activemq/5.17.6/apache-activemq-5.17.6-bin.tar.gz
+--2026-02-27 16:04:11--  https://archive.apache.org/dist/activemq/5.17.6/apache-activemq-5.17.6-bin.tar.gz
+Resolving archive.apache.org (archive.apache.org)... 65.108.204.189, 2a01:4f9:1a:a084::2
+Connecting to archive.apache.org (archive.apache.org)|65.108.204.189|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 70139553 (67M) [application/x-gzip]
+Saving to: ‘apache-activemq-5.17.6-bin.tar.gz’
+
+apache-activemq-5.17.6-bin.tar.gz   100%[=================================================>]  66.90M  18.1MB/s    in 4.0s
+
+2026-02-27 16:04:16 (16.8 MB/s) - ‘apache-activemq-5.17.6-bin.tar.gz’ saved [70139553/70139553]
+
+toor@ip-172-31-10-206:~$ tar -xzf apache-activemq-5.17.6-bin.tar.gz
+toor@ip-172-31-10-206:~$ ls -la | grep activemq
+drwxr-xr-x 9 toor toor     4096 Oct 11  2023 apache-activemq-5.17.6
+-rw-r--r-- 1 toor toor 70139553 Feb 27 16:04 apache-activemq-5.17.6-bin.tar.gz
+
+toor@ip-172-31-10-206:~$ sudo mv apache-activemq-5.17.6 /opt/activemq
+
+toor@ip-172-31-10-206:~$ sudo ln -sf /opt/activemq /opt/activemq-current
+
+toor@ip-172-31-10-206:~$ sudo chown -R $USER:$USER /opt/activemq
+toor@ip-172-31-10-206:~$ ls -la /opt | grep activemq
+drwxr-xr-x 9 toor toor 4096 Feb 27 16:04 activemq
+lrwxrwxrwx 1 root root   12 Feb 27 16:04 activemq-current -> /opt/activemq
+
+toor@ip-172-31-10-206:~$ cd /opt/activemq/conf
+toor@ip-172-31-10-206:/opt/activemq/conf$ ls -la | head
+total 140
+drwxr-xr-x 2 toor toor  4096 Feb 27 16:05 .
+drwxr-xr-x 9 toor toor  4096 Feb 27 16:04 ..
+-rw-r--r-- 1 toor toor  1978 Oct 11  2023 activemq.xml
+-rw-r--r-- 1 toor toor  1389 Oct 11  2023 credentials.properties
+-rw-r--r-- 1 toor toor  9045 Oct 11  2023 jetty.xml
+...
+
+toor@ip-172-31-10-206:/opt/activemq/conf$ cp activemq.xml activemq.xml.backup
+toor@ip-172-31-10-206:/opt/activemq/conf$ ls -la activemq.xml*
+-rw-r--r-- 1 toor toor 1978 Feb 27 16:05 activemq.xml
+-rw-r--r-- 1 toor toor 1978 Feb 27 16:05 activemq.xml.backup
+
+toor@ip-172-31-10-206:/opt/activemq/conf$ cd /opt/activemq
+toor@ip-172-31-10-206:/opt/activemq$ ./bin/activemq start
+INFO: Loading '/opt/activemq//bin/env'
+INFO: Using java '/usr/lib/jvm/java-11-openjdk-amd64/bin/java'
+INFO: Starting - inspect logfiles specified in logging.properties and log4j.properties to get details
+INFO: pidfile created : '/opt/activemq//data/activemq.pid' (pid '4932')
+
+toor@ip-172-31-10-206:/opt/activemq$ sleep 10
+
+toor@ip-172-31-10-206:/opt/activemq$ ./bin/activemq status
+ActiveMQ is running (pid '4932')
+
+toor@ip-172-31-10-206:/opt/activemq$ ps aux | grep activemq | grep -v grep
+toor        4932  3.6  6.1 3867848 246920 ?      Sl   16:06   0:04 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xms64M -Xmx1G -Djava.util.logging.config.file=logging.properties -Djava.security.auth.login.config=/opt/activemq//conf/login.config -Dcom.sun.management.jmxremote -Dorg.apache.activemq.UseDedicatedTaskRunner=true -Dorg.apache.activemq.default.directory.prefix=/opt/activemq/ -Djetty.base=/opt/activemq -Djetty.home=/opt/activemq -Djetty.host=0.0.0.0 -Djetty.port=8161 -Djetty.https.port=8162 -Djetty.sslContext.keyStorePath=/opt/activemq/conf/keystore -Djetty.sslContext.keyStorePassword=password -jar /opt/activemq/bin/activemq.jar start
+
+toor@ip-172-31-10-206:/opt/activemq$ netstat -tlnp | grep -E ':(61616|8161)'
+-bash: netstat: command not found
+
+toor@ip-172-31-10-206:/opt/activemq$ sudo apt update -y
+Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:3 http://security.ubuntu.com/ubuntu noble-security InRelease
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+
+toor@ip-172-31-10-206:/opt/activemq$ sudo apt install -y net-tools
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+...
+Setting up net-tools (2.10-0.1ubuntu4) ...
+
+toor@ip-172-31-10-206:/opt/activemq$ netstat -tlnp | grep -E ':(61616|8161)'
+tcp6       0      0 :::61616                :::*                    LISTEN      4932/java
+tcp6       0      0 :::8161                 :::*                    LISTEN      4932/java
+
+toor@ip-172-31-10-206:/opt/activemq$ curl -s -o /dev/null -w "%{http_code}" http://localhost:8161/admin/
+401
+
+toor@ip-172-31-10-206:/opt/activemq$ curl -s -u admin:admin -o /dev/null -w "%{http_code}" http://localhost:8161/admin/
+200
+
+toor@ip-172-31-10-206:/opt/activemq$ echo "ActiveMQ Web Console is available at: http://localhost:8161/admin/"
+toor@ip-172-31-10-206:/opt/activemq$ echo "Default credentials: admin/admin"
+ActiveMQ Web Console is available at: http://localhost:8161/admin/
+Default credentials: admin/admin
+
+
+toor@ip-172-31-10-206:/opt/activemq$ mkdir -p ~/camel-activemq-lab
+toor@ip-172-31-10-206:/opt/activemq$ cd ~/camel-activemq-lab
+toor@ip-172-31-10-206:~/camel-activemq-lab$
+
+toor@ip-172-31-10-206:~/camel-activemq-lab$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO] --------------< com.example:camel-activemq-integration >---------------
+[INFO] Building Camel ActiveMQ Integration Lab 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:3.2.0:clean (default-clean) @ camel-activemq-integration ---
+[INFO] Deleting /home/toor/camel-activemq-lab/target
+[INFO]
+[INFO] --- maven-resources-plugin:3.3.1:resources (default-resources) @ camel-activemq-integration ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO]
+[INFO] --- maven-compiler-plugin:3.11.0:compile (default-compile) @ camel-activemq-integration ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 5 source files to /home/toor/camel-activemq-lab/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+toor@ip-172-31-10-206:~/camel-activemq-lab$ mvn package
+[INFO] Scanning for projects...
+[INFO] --------------< com.example:camel-activemq-integration >---------------
+[INFO] Building Camel ActiveMQ Integration Lab 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO]
+[INFO] --- maven-surefire-plugin:3.0.0-M9:test (default-test) @ camel-activemq-integration ---
+[INFO] No tests to run.
+[INFO]
+[INFO] --- maven-jar-plugin:3.3.0:jar (default-jar) @ camel-activemq-integration ---
+[INFO] Building jar: /home/toor/camel-activemq-lab/target/camel-activemq-integration-1.0.0.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+toor@ip-172-31-10-206:~/camel-activemq-lab$ echo "Build completed. JAR file location:"
+toor@ip-172-31-10-206:~/camel-activemq-lab$ ls -la target/*.jar
+Build completed. JAR file location:
+-rw-r--r-- 1 toor toor  8756 Feb 27 16:19 target/camel-activemq-integration-1.0.0.jar
+
+
+toor@ip-172-31-10-221:~/camel-activemq-lab$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO] --------------< com.example:camel-activemq-integration >---------------
+[INFO] Building Camel ActiveMQ Integration Lab 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:3.2.0:clean (default-clean) @ camel-activemq-integration ---
+[INFO] Deleting /home/toor/camel-activemq-lab/target
+[INFO]
+[INFO] --- maven-resources-plugin:3.3.1:resources (default-resources) @ camel-activemq-integration ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO]
+[INFO] --- maven-compiler-plugin:3.11.0:compile (default-compile) @ camel-activemq-integration ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 7 source files to /home/toor/camel-activemq-lab/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+
+toor@ip-172-31-10-221:~/camel-activemq-lab$ mvn exec:java -Dexec.mainClass="com.example.camel.CamelActiveMQApplication"
+16:33:40.125 [com.example.camel.CamelActiveMQApplication.main()] INFO  com.example.camel.CamelActiveMQApplication - Starting Camel-ActiveMQ Integration Application
+16:33:40.129 [com.example.camel.CamelActiveMQApplication.main()] INFO  com.example.camel.ActiveMQConfig - Creating JMS component for Camel
+16:33:40.130 [com.example.camel.CamelActiveMQApplication.main()] INFO  com.example.camel.ActiveMQConfig - Creating pooled connection factory
+16:33:40.130 [com.example.camel.CamelActiveMQApplication.main()] INFO  com.example.camel.ActiveMQConfig - Creating ActiveMQ connection factory for broker: tcp://localhost:61616
+16:33:40.412 [com.example.camel.CamelActiveMQApplication.main()] INFO  com.example.camel.CamelRouteBuilder - Configuring Camel routes for ActiveMQ integration
+16:33:40.899 [com.example.camel.CamelActiveMQApplication.main()] INFO  org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.7 (camel-1) started in 430ms
+16:33:40.901 [com.example.camel.CamelActiveMQApplication.main()] INFO  com.example.camel.CamelRouteBuilder - Camel routes configured successfully
+16:33:40.902 [com.example.camel.CamelActiveMQApplication.main()] INFO  com.example.camel.CamelActiveMQApplication - Camel-ActiveMQ Integration Application started successfully
+16:33:40.902 [com.example.camel.CamelActiveMQApplication.main()] INFO  com.example.camel.CamelActiveMQApplication - Press Ctrl+C to stop the application
+
+
+toor@ip-172-31-10-221:~/camel-activemq-lab$ mvn exec:java -Dexec.mainClass="com.example.camel.MessageReceiver"
+=== Message Receiver Menu ===
+1. Receive from output.queue
+2. Receive from fulfillment.queue
+3. Receive from review.queue
+4. Receive from processed.notifications
+5. Receive from batch.output
+6. Receive from success.queue
+7. Receive from error.queue
+8. Receive from dead.letter.queue
+9. Receive from response.queue
+10. Exit
+Choose an option:
+
+
+toor@ip-172-31-10-221:~/camel-activemq-lab$ mvn exec:java -Dexec.mainClass="com.example.camel.MessageSender"
+=== Message Sender Menu ===
+1. Send to input.queue (simple transformation)
+2. Send to order.queue (order processing)
+3. Send to notification.input (pub-sub pattern)
+4. Send to batch.input (aggregation pattern)
+5. Send to request.queue (request-reply)
+6. Send to risky.queue (error handling)
+7. Exit
+Choose an option:
+
+
+Sender: choose option 1
+Choose an option: 1
+Enter message content: hello camel from activemq
+Message sent successfully to input.queue
+
+Camel app logs:
+16:35:10.221 [Camel (camel-1) thread #1 - JmsConsumer[input.queue]] INFO  simple-transformation-route - Received message from input.queue: hello camel from activemq
+16:35:10.224 [Camel (camel-1) thread #1 - JmsConsumer[input.queue]] INFO  com.example.camel.MessageProcessor - Processing message: hello camel from activemq
+16:35:10.225 [Camel (camel-1) thread #1 - JmsConsumer[input.queue]] INFO  com.example.camel.MessageProcessor - Message processed successfully: Processed at 2026-02-27 16:35:10: HELLO CAMEL FROM ACTIVEMQ
+16:35:10.225 [Camel (camel-1) thread #1 - JmsConsumer[input.queue]] INFO  simple-transformation-route - Sending processed message to output.queue: Processed at 2026-02-27 16:35:10: HELLO CAMEL FROM ACTIVEMQ
+
+Receiver: choose option 1
+Choose an option: 1
+Waiting for message from output.queue (timeout 5s)...
+✅ Received: Processed at 2026-02-27 16:35:10: HELLO CAMEL FROM ACTIVEMQ
+Header ProcessedBy: MessageProcessor
+Header ProcessedAt: 2026-02-27 16:35:10
+
+
+Sender: option 2
+Choose an option: 2
+Enter message content: Order: laptop qty=1 customer=Abdul
+Message sent successfully to order.queue
+
+Camel app logs:
+16:36:02.120 [Camel (camel-1) thread #2 - JmsConsumer[order.queue]] INFO  order-processing-route - Received order from order.queue: Order: laptop qty=1 customer=Abdul
+16:36:02.121 [Camel (camel-1) thread #2 - JmsConsumer[order.queue]] INFO  com.example.camel.OrderProcessor - Processing order: Order: laptop qty=1 customer=Abdul
+16:36:02.122 [Camel (camel-1) thread #2 - JmsConsumer[order.queue]] INFO  com.example.camel.OrderProcessor - Order processed: ORD-4821 with status: APPROVED
+16:36:02.123 [Camel (camel-1) thread #2 - JmsConsumer[order.queue]] INFO  order-processing-route - Order approved, sending to fulfillment: Order ID: ORD-4821 | Status: APPROVED | Original: Order: laptop qty=1 customer=Abdul
+
+Receiver: option 2
+Choose an option: 2
+Waiting for message from fulfillment.queue (timeout 5s)...
+✅ Received: Order ID: ORD-4821 | Status: APPROVED | Original: Order: laptop qty=1 customer=Abdul
+Header OrderId: ORD-4821
+Header OrderStatus: APPROVED
+
+
+Sender: option 3
+Choose an option: 3
+Enter message content: System Maintenance at 10PM
+Message sent successfully to notification.input
+
+Camel app logs:
+16:37:10.501 [Camel (camel-1) thread #3 - JmsConsumer[notification.input]] INFO  notification-publisher-route - Publishing notification to topic: System Maintenance at 10PM
+16:37:10.520 [Camel (camel-1) thread #4 - JmsConsumer[email.notifications]] INFO  email-notification-subscriber - Email notification received: System Maintenance at 10PM
+16:37:10.521 [Camel (camel-1) thread #5 - JmsConsumer[sms.notifications]] INFO  sms-notification-subscriber - SMS notification received: System Maintenance at 10PM
+16:37:10.522 [Camel (camel-1) thread #6 - JmsConsumer[push.notifications]] INFO  push-notification-subscriber - Push notification received: System Maintenance at 10PM
+
+Receiver: option 4 (pull 3 times)
+Choose an option: 4
+Waiting for message from processed.notifications (timeout 5s)...
+✅ Received: EMAIL: System Maintenance at 10PM
+
+Choose an option: 4
+Waiting for message from processed.notifications (timeout 5s)...
+✅ Received: SMS: System Maintenance at 10PM
+
+Choose an option: 4
+Waiting for message from processed.notifications (timeout 5s)...
+✅ Received: PUSH: System Maintenance at 10PM
+
+
+Sender: option 4 (send 3 messages)
+Choose an option: 4
+Enter message content: batch-msg-1
+Message sent successfully to batch.input
+
+Choose an option: 4
+Enter message content: batch-msg-2
+Message sent successfully to batch.input
+
+Choose an option: 4
+Enter message content: batch-msg-3
+Message sent successfully to batch.input
+
+Camel app logs:
+16:38:45.111 [Camel (camel-1) thread #7 - JmsConsumer[batch.input]] INFO  batch-aggregation-route - Received message for batching: batch-msg-1
+16:38:46.028 [Camel (camel-1) thread #7 - JmsConsumer[batch.input]] INFO  batch-aggregation-route - Received message for batching: batch-msg-2
+16:38:46.901 [Camel (camel-1) thread #7 - JmsConsumer[batch.input]] INFO  batch-aggregation-route - Received message for batching: batch-msg-3
+16:38:46.904 [Camel (camel-1) thread #7 - JmsConsumer[batch.input]] INFO  batch-aggregation-route - Processing batch of 3 messages
+16:38:46.906 [Camel (camel-1) thread #7 - JmsConsumer[batch.input]] INFO  batch-aggregation-route - Processing individual message from batch: batch-msg-1
+16:38:46.907 [Camel (camel-1) thread #7 - JmsConsumer[batch.input]] INFO  batch-aggregation-route - Processing individual message from batch: batch-msg-2
+16:38:46.907 [Camel (camel-1) thread #7 - JmsConsumer[batch.input]] INFO  batch-aggregation-route - Processing individual message from batch: batch-msg-3
+
+Receiver: option 5 (pull 3 times)
+Choose an option: 5
+Waiting for message from batch.output (timeout 5s)...
+✅ Received: batch-msg-1
+
+Choose an option: 5
+Waiting for message from batch.output (timeout 5s)...
+✅ Received: batch-msg-2
+
+Choose an option: 5
+Waiting for message from batch.output (timeout 5s)...
+✅ Received: batch-msg-3
+
+
+Sender: option 5
+Choose an option: 5
+Enter message content: Get customer status for CUST-11
+Message sent successfully to request.queue
+
+Camel app logs:
+16:39:55.018 [Camel (camel-1) thread #8 - JmsConsumer[request.queue]] INFO  request-reply-route - Processing request: Get customer status for CUST-11
+16:39:55.019 [Camel (camel-1) thread #8 - JmsConsumer[request.queue]] INFO  request-reply-route - Sending response: Response to: Get customer status for CUST-11
+
+Receiver: option 9
+Choose an option: 9
+Waiting for message from response.queue (timeout 5s)...
+✅ Received: Response to: Get customer status for CUST-11
+
+
+Sender: option 6 (send multiple)
+Choose an option: 6
+Enter message content: risky-message-1
+Message sent successfully to risky.queue
+
+Choose an option: 6
+Enter message content: risky-message-2
+Message sent successfully to risky.queue
+
+Choose an option: 6
+Enter message content: risky-message-3
+Message sent successfully to risky.queue
+
+Camel app logs:
+16:41:11.201 [Camel (camel-1) thread #9 - JmsConsumer[risky.queue]] INFO  risky-processing-route - Processing risky message: risky-message-1
+16:41:11.203 [Camel (camel-1) thread #9 - JmsConsumer[risky.queue]] INFO  risky-processing-route - Risky message processed successfully: Successfully processed: risky-message-1
+
+16:41:12.014 [Camel (camel-1) thread #9 - JmsConsumer[risky.queue]] INFO  risky-processing-route - Processing risky message: risky-message-2
+16:41:12.015 [Camel (camel-1) thread #9 - JmsConsumer[risky.queue]] WARN  org.apache.camel.processor.errorhandler.RedeliveryErrorHandler - Redelivery attempt 1/3 due to: Simulated processing error
+16:41:14.018 [Camel (camel-1) thread #9 - JmsConsumer[risky.queue]] WARN  org.apache.camel.processor.errorhandler.RedeliveryErrorHandler - Redelivery attempt 2/3 due to: Simulated processing error
+16:41:18.020 [Camel (camel-1) thread #9 - JmsConsumer[risky.queue]] ERROR org.apache.camel.processor.errorhandler.DeadLetterChannel - Failed delivery for (MessageId: ...) exhausted after delivery attempt: 4 caught: java.lang.RuntimeException: Simulated processing error
+
+16:41:18.221 [Camel (camel-1) thread #9 - JmsConsumer[risky.queue]] INFO  risky-processing-route - Processing risky message: risky-message-3
+16:41:18.222 [Camel (camel-1) thread #9 - JmsConsumer[risky.queue]] INFO  risky-processing-route - Risky message processed successfully: Successfully processed: risky-message-3
+
+Receiver: option 6
+Choose an option: 6
+Waiting for message from success.queue (timeout 5s)...
+✅ Received: Successfully processed: risky-message-1
+
+Choose an option: 6
+Waiting for message from success.queue (timeout 5s)...
+✅ Received: Successfully processed: risky-message-3
+
+Receiver: option 8
+Choose an option: 8
+Waiting for message from dead.letter.queue (timeout 5s)...
+✅ Received: risky-message-2
+
+
+toor@ip-172-31-10-221:~/camel-activemq-lab$ curl -s -u admin:admin -o /dev/null -w "%{http_code}" http://localhost:8161/admin/
+200
+
+^C16:43:12.777 [Thread-1] INFO  com.example.camel.CamelActiveMQApplication - Shutting down Camel-ActiveMQ Integration Application
+16:43:13.052 [Thread-1] INFO  org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.7 (camel-1) shutdown in 264ms
+
+toor@ip-172-31-10-221:~/camel-activemq-lab$ /opt/activemq/bin/activemq stop
+INFO: Loading '/opt/activemq//bin/env'
+INFO: Stopping ActiveMQ: pid '4932'
+INFO: Waiting at most 30 seconds for pid '4932' to stop
+INFO: ActiveMQ stopped
