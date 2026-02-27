@@ -1,0 +1,46 @@
+# manifests/grafana-dashboard.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: camel-scaling-dashboard
+  namespace: camel-scaling-lab
+  labels:
+    grafana_dashboard: "1"
+data:
+  camel-scaling.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "Camel Scaling Dashboard",
+        "tags": ["camel", "scaling"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "Pod Count",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "count(up{job=\"scalable-camel-service\"})",
+                "legendFormat": "Active Pods"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+          },
+          {
+            "id": 2,
+            "title": "CPU Usage",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(container_cpu_usage_seconds_total{pod=~\"scalable-camel-service.*\"}[5m]) * 100",
+                "legendFormat": "{{pod}}"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+          }
+        ],
+        "time": {"from": "now-1h", "to": "now"},
+        "refresh": "5s"
+      }
+    }
