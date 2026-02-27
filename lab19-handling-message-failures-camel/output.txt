@@ -1,0 +1,305 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.example:camel-error-handling >----------------
+[INFO] Building camel-error-handling 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-error-handling ---
+[INFO] Deleting /home/toor/camel-error-handling-lab/target
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ camel-error-handling ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 6 source files to /home/toor/camel-error-handling-lab/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.116 s
+[INFO] Finished at: 2026-02-27T17:29:41Z
+[INFO] ------------------------------------------------------------------------
+
+[INFO] Scanning for projects...
+[INFO] ---------------< com.example:camel-error-handling >----------------
+[INFO] Building camel-error-handling 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ camel-error-handling ---
+[INFO] Building jar: /home/toor/camel-error-handling-lab/target/camel-error-handling-1.0.0.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+[1] 4638
+
+Starting Camel Error Handling Application...
+Press Ctrl+C to stop the application
+[com.example.camel.ErrorHandlingApplication.main()] INFO org.apache.camel.main.MainSupport - Starting Camel (CamelContext: camel-1) is starting
+[com.example.camel.ErrorHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (total:4 started:4)
+[retry-route] INFO retry-route - Processing message with retry strategy: Test message for retry strategy - Message 1
+
+[WARN ] ... Redelivery attempt: 1 due to Simulated general exception for message: Test message for retry strategy - Message 1
+[WARN ] ... Redelivery attempt: 2 due to Simulated runtime exception for message: Test message for retry strategy - Message 1
+Successfully processed: Test message for retry strategy - Message 1
+
+[retry-route] INFO retry-route - Message processed successfully: Processed successfully: Test message for retry strategy - Message 1 (attempt #3)
+
+total 12
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:32 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor   86 Feb 27 17:32 retry-test-1.txt
+-rw-rw-r-- 1 toor toor   86 Feb 27 17:33 retry-test-2.txt
+-rw-rw-r-- 1 toor toor   86 Feb 27 17:33 retry-test-3.txt
+
+Every 2.0s: ls -la output/dlq/success/ && echo "---" && ls -la output/dlq/failed/  ip-172-31-10-239: Fri Feb 27 17:35:22 2026
+
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:34 .
+drwxrwxr-x 4 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor   62 Feb 27 17:34 dlq-test-2.txt
+---
+total 8
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:34 .
+drwxrwxr-x 4 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor   29 Feb 27 17:34 dlq-test-1.txt
+-rw-rw-r-- 1 toor toor   29 Feb 27 17:34 dlq-test-3.txt
+
+DLQ test message - Message 1
+DLQ test message - Message 3
+
+[dlq-handler-route] INFO dlq-handler-route - Message sent to DLQ: DLQ test message - Message 1
+[dlq-handler-route] INFO dlq-handler-route - Message sent to DLQ: DLQ test message - Message 3
+
+Every 2.0s: echo "Primary:" && ls -la output/fallback/primary/ && echo "Fallback:" && ls -la output/fallback/fallback/  ip-172-31-10-239: Fri Feb 27 17:37:58 2026
+
+Primary:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:37 .
+drwxrwxr-x 5 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor   92 Feb 27 17:37 fallback-test-1.txt
+
+Fallback:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:37 .
+drwxrwxr-x 5 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor  120 Feb 27 17:37 fallback-test-2.txt
+
+Every 2.0s: echo "Success:" && ls -la output/advanced/success/ && echo "Validation Errors:" && ls -la output/advanced/validation-errors/ && echo "Runtime Errors:" && ls -la output/advanced/runtime-errors/ && echo "General Errors:" && ls -la output/advanced/general-errors/  ip-172-31-10-239: Fri Feb 27 17:40:10 2026
+
+Success:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:39 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor   79 Feb 27 17:39 normal-test.txt
+
+Validation Errors:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:39 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor  126 Feb 27 17:39 validation-test.txt
+
+Runtime Errors:
+total 0
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:39 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 17:28 ..
+
+General Errors:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:39 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor   49 Feb 27 17:39 general-test.txt
+
+=== Camel Error Handling Monitoring ===
+Timestamp: Fri Feb 27 17:41:26 UTC 2026
+
+=== Retry Strategy Results ===
+Successful processing:
+total 12
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:33 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor   86 Feb 27 17:32 retry-test-1.txt
+-rw-rw-r-- 1 toor toor   86 Feb 27 17:33 retry-test-2.txt
+-rw-rw-r-- 1 toor toor   86 Feb 27 17:33 retry-test-3.txt
+
+=== Dead Letter Queue Results ===
+Successful processing:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:34 .
+drwxrwxr-x 4 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor   62 Feb 27 17:34 dlq-test-2.txt
+Failed processing (DLQ):
+total 8
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:34 .
+drwxrwxr-x 4 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor   29 Feb 27 17:34 dlq-test-1.txt
+-rw-rw-r-- 1 toor toor   29 Feb 27 17:34 dlq-test-3.txt
+
+=== Fallback Strategy Results ===
+Primary processing:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:37 .
+drwxrwxr-x 5 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor   92 Feb 27 17:37 fallback-test-1.txt
+Fallback processing:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:37 .
+drwxrwxr-x 5 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor  120 Feb 27 17:37 fallback-test-2.txt
+
+=== Advanced Error Handling Results ===
+Successful processing:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:39 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor   79 Feb 27 17:39 normal-test.txt
+Validation errors:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:39 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor  126 Feb 27 17:39 validation-test.txt
+Runtime errors:
+total 0
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:39 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 17:28 ..
+General errors:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 17:39 .
+drwxrwxr-x 6 toor toor 4096 Feb 27 17:28 ..
+-rw-rw-r-- 1 toor toor   49 Feb 27 17:39 general-test.txt
+
+/usr/bin/bc
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+bc is already the newest version (1.07.1-3build1).
+
+=== Error Handling Performance Analysis ===
+Analysis timestamp: Fri Feb 27 17:43:58 UTC 2026
+
+Retry Strategy:
+ Successfully processed: 3 messages
+
+Dead Letter Queue Strategy:
+ Successfully processed: 1 messages
+ Failed (sent to DLQ): 2 messages
+ Success rate: 33.33%
+
+Fallback Strategy:
+ Primary processing: 1 messages
+ Fallback processing: 1 messages
+ Primary success rate: 50.00%
+
+Advanced Error Handling:
+ Successful processing: 1 messages
+ Validation errors: 1 messages
+ Runtime errors: 0 messages
+ General errors: 1 messages
+
+Total messages processed across all strategies: 11
+
+Starting load test for Camel error handling...
+Load test messages generated successfully!
+Monitor the processing with: ./monitor-processing.sh
+
+toor        4638  2.1  3.4 456912 142820 pts/0  Sl   17:31   0:14 /usr/bin/java -cp ... com.example.camel.ErrorHandlingApplication
+toor        5019  0.0  0.0   6508  2304 pts/1  S+   17:45   0:00 grep --color=auto ErrorHandlingApplication
+
+[1] 5182
+
+Starting load test for Camel error handling...
+Load test messages generated successfully!
+Monitor the processing with: ./monitor-processing.sh
+
+=== Error Handling Performance Analysis ===
+Analysis timestamp: Fri Feb 27 17:47:41 UTC 2026
+
+Retry Strategy:
+ Successfully processed: 13 messages
+
+Dead Letter Queue Strategy:
+ Successfully processed: 4 messages
+ Failed (sent to DLQ): 9 messages
+ Success rate: 30.77%
+
+Fallback Strategy:
+ Primary processing: 5 messages
+ Fallback processing: 6 messages
+ Primary success rate: 45.45%
+
+Advanced Error Handling:
+ Successful processing: 6 messages
+ Validation errors: 6 messages
+ Runtime errors: 1 messages
+ General errors: 4 messages
+
+Total messages processed across all strategies: 54
+
+[WARN ] ... Redelivery attempt: 1 due to Simulated general exception for message: Retry load test message 1 - Fri Feb 27 17:46:51 UTC 2026
+[WARN ] ... Redelivery attempt: 2 due to Simulated runtime exception for message: Retry load test message 1 - Fri Feb 27 17:46:51 UTC 2026
+[WARN ] ... Redelivery attempt: 1 due to Simulated validation error for message: Retry load test message 2 - Fri Feb 27 17:46:52 UTC 2026
+
+[dlq-handler-route] INFO dlq-handler-route - Message sent to DLQ: DLQ load test message 1 - Fri Feb 27 17:46:56 UTC 2026
+[dlq-handler-route] INFO dlq-handler-route - Message sent to DLQ: DLQ load test message 2 - Fri Feb 27 17:46:57 UTC 2026
+
+Fallback processing applied for: Fallback load test message 1 - Fri Feb 27 17:47:01 UTC 2026
+Fallback processing applied for: Fallback load test message 3 - Fri Feb 27 17:47:02 UTC 2026
+
+Validation error occurred: Validation failed for: VALIDATE - Load test validation message 1
+General exception caught: General error for: GENERAL - This should trigger general error
+Runtime error, retrying: Runtime error for: RUNTIME - Load test runtime message 1
+
+Test report generated: error-handling-test-report.txt
+
+=== CAMEL ERROR HANDLING LAB TEST REPORT ===
+Generated on: Fri Feb 27 17:49:13 UTC 2026
+=========================================
+
+=== CONFIGURATION SUMMARY ===
+- Retry Strategy: Max 3 retries, 2 second delay
+- DLQ Strategy: Max 2 retries, 1 second delay
+- Fallback Strategy: Immediate fallback on failure
+- Advanced Handling: Exception-specific routing
+
+=== PROCESSING RESULTS ===
+=== Error Handling Performance Analysis ===
+Analysis timestamp: Fri Feb 27 17:49:13 UTC 2026
+
+Retry Strategy:
+ Successfully processed: 13 messages
+
+Dead Letter Queue Strategy:
+ Successfully processed: 4 messages
+ Failed (sent to DLQ): 9 messages
+ Success rate: 30.77%
+
+Fallback Strategy:
+ Primary processing: 5 messages
+ Fallback processing: 6 messages
+ Primary success rate: 45.45%
+
+Advanced Error Handling:
+ Successful processing: 6 messages
+ Validation errors: 6 messages
+ Runtime errors: 1 messages
+ General errors: 4 messages
+
+Total messages processed across all strategies: 54
+
+=== ERROR PATTERNS ANALYSIS ===
+Retry attempts found:
+18
+
+DLQ routing events:
+9
+
+Fallback processing events:
+6
+
+=== SAMPLE ERROR MESSAGES ===
+Recent error log entries:
+[WARN ] ... Redelivery attempt: 2 due to Simulated runtime exception for message: Retry load test message 9 - Fri Feb 27 17:46:55 UTC 2026
+[ERROR] ... Exhausted after delivery attempt: 3 caught: java.lang.Exception: Simulated general exception for message: DLQ load test message 10 - Fri Feb 27 17:46:59 UTC 2026
+
+=== RECOMMENDATIONS ===
+1. Monitor DLQ messages regularly for business impact
+2. Adjust retry delays based on downstream system capabilities
+3. Implement alerting for high failure rates
+4. Consider circuit breaker patterns for external dependencies
