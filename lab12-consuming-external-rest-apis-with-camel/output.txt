@@ -1,0 +1,503 @@
+# output.txt
+# Lab 12 - Consuming External REST APIs with Apache Camel
+# Execution Output Log (Sequential, No Truncation)
+
+# ------------------------------------------------------------
+# Task 1.5: Compile the Project (Basic Setup)
+# ------------------------------------------------------------
+
+$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com.example:camel-rest-consumer >-------------------
+[INFO] Building camel-rest-consumer 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-rest-consumer ---
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ camel-rest-consumer ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-rest-consumer ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to /home/toor/camel-rest-consumer/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.112 s
+[INFO] Finished at: 2026-02-27T15:06:09Z
+[INFO] ------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------
+# Task 1.5: Run the Application (Basic Setup)
+# ------------------------------------------------------------
+
+$ mvn exec:java
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com.example:camel-rest-consumer >-------------------
+[INFO] Building camel-rest-consumer 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO] 
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-rest-consumer ---
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is starting
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (started:6)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started fetch-posts-route (timer://fetchPosts)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started fetch-user-route (timer://fetchUser)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started process-posts-route (direct://processPostsData)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started process-user-route (direct://processUserData)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started save-post-route (direct://savePostData)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started save-user-route (direct://saveUserData)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) started in 1s104ms
+Camel REST Consumer started. Press Ctrl+C to stop.
+[fetch-posts-route] INFO fetch-posts-route - Starting to fetch posts from JSONPlaceholder API...
+[fetch-posts-route] INFO fetch-posts-route - Received response with 200 status code
+[fetch-posts-route] INFO fetch-posts-route - Successfully fetched posts data
+[process-posts-route] INFO process-posts-route - Processing posts data...
+[process-posts-route] INFO process-posts-route - Converted JSON to object. Processing 100 posts
+[process-posts-route] INFO process-posts-route - Processing post: ID=1, Title=sunt aut facere repellat provident occaecati excepturi optio reprehenderit
+[save-post-route] INFO save-post-route - Saving post data: {userId=1, id=1, title=sunt aut facere repellat provident occaecati excepturi optio reprehenderit, body=quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto}
+Post saved to database: {userId=1, id=1, title=sunt aut facere repellat provident occaecati excepturi optio reprehenderit, body=quia et suscipit
+suscipit recusandae consequuntur expedita et cum
+reprehenderit molestiae ut ut quas totam
+nostrum rerum est autem sunt rem eveniet architecto}
+[process-posts-route] INFO process-posts-route - Processing post: ID=2, Title=qui est esse
+[save-post-route] INFO save-post-route - Saving post data: {userId=1, id=2, title=qui est esse, body=est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla}
+Post saved to database: {userId=1, id=2, title=qui est esse, body=est rerum tempore vitae
+sequi sint nihil reprehenderit dolor beatae ea dolores neque
+fugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis
+qui aperiam non debitis possimus qui neque nisi nulla}
+[fetch-user-route] INFO fetch-user-route - Fetching user information...
+[fetch-user-route] INFO fetch-user-route - User API response status: 200
+[process-user-route] INFO process-user-route - Processing user data...
+[process-user-route] INFO process-user-route - User Info - Name: Leanne Graham, Email: Sincere@april.biz, Company: Romaguera-Crona
+[save-user-route] INFO save-user-route - Saving user data: {id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz, address={street=Kulas Light, suite=Apt. 556, city=Gwenborough, zipcode=92998-3874, geo={lat=-37.3159, lng=81.1496}}, phone=1-770-736-8031 x56442, website=hildegard.org, company={name=Romaguera-Crona, catchPhrase=Multi-layered client-server neural-net, bs=harness real-time e-markets}}
+User saved to database: {id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz, address={street=Kulas Light, suite=Apt. 556, city=Gwenborough, zipcode=92998-3874, geo={lat=-37.3159, lng=81.1496}}, phone=1-770-736-8031 x56442, website=hildegard.org, company={name=Romaguera-Crona, catchPhrase=Multi-layered client-server neural-net, bs=harness real-time e-markets}}
+
+
+# ------------------------------------------------------------
+# Task 3.3: Build After Adding Enhanced Routes + Logging
+# ------------------------------------------------------------
+
+$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com.example:camel-rest-consumer >-------------------
+[INFO] Building camel-rest-consumer 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-rest-consumer ---
+[INFO] Deleting /home/toor/camel-rest-consumer/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ camel-rest-consumer ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-rest-consumer ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 4 source files to /home/toor/camel-rest-consumer/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.966 s
+[INFO] Finished at: 2026-02-27T15:18:22Z
+[INFO] ------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------
+# Task 3.3: Run Comprehensive Tests with test-runner.sh
+# ------------------------------------------------------------
+
+$ ./test-runner.sh
+=== Camel REST API Consumer Test Runner ===
+
+Test 1: Basic API consumption test
+Starting test: Basic API Test
+Duration: 60 seconds
+----------------------------------------
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com.example:camel-rest-consumer >-------------------
+[INFO] Building camel-rest-consumer 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO] 
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-rest-consumer ---
+=== Starting Camel REST API Consumer ===
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is starting
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (started:8)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started enhanced-posts-route (timer://enhancedPosts)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started enhanced-users-route (timer://enhancedUsers)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started validate-store-route (direct://validateAndStore)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started process-users-array-route (direct://processUsersArray)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started store-database-route (direct://storeInDatabase)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started store-user-database-route (direct://storeUserInDatabase)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started handle-api-error-route (direct://handleApiError)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started general-error-handler-route (direct://handleError)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) started in 1s211ms
+Camel REST Consumer started successfully!
+The application will run for 2 minutes to demonstrate API consumption.
+Press Ctrl+C to stop earlier if needed.
+[enhanced-posts-route] INFO enhanced-posts-route - === Starting Enhanced Posts Fetch ===
+[enhanced-posts-route] INFO enhanced-posts-route - Posts API Response Code: 200
+[enhanced-posts-route] INFO enhanced-posts-route - Successfully received posts data
+[enhanced-posts-route] INFO enhanced-posts-route - Data transformation completed
+[validate-store-route] INFO validate-store-route - Validating transformed data...
+[validate-store-route] INFO validate-store-route - Data validation passed - category field present
+[validate-store-route] INFO validate-store-route - Storing post: SUNT AUT FACERE REPELLAT PROVIDENT OCCAECATI EXCEPTURI OPTIO REPREHENDERIT (Category: PRIORITY)
+[store-database-route] INFO store-database-route - === STORING POST IN DATABASE ===
+DATABASE INSERT: {userId=1, id=1, title=SUNT AUT FACERE REPELLAT PROVIDENT OCCAECATI EXCEPTURI OPTIO REPREHENDERIT, body=quia et suscipit
+suscipit recusandae consequuntur expedita et cum
+reprehenderit molestiae ut ut quas totam
+nostrum rerum est autem sunt rem eveniet architecto, processedAt=Fri Feb 27 15:18:30 UTC 2026, source=jsonplaceholder-api, wordCount=23, category=PRIORITY}
+[store-database-route] INFO store-database-route - Post successfully stored in database
+[enhanced-users-route] INFO enhanced-users-route - === Starting Enhanced Users Fetch ===
+[enhanced-users-route] INFO enhanced-users-route - Users API Response Code: 200
+[enhanced-users-route] INFO enhanced-users-route - Successfully received users data
+[enhanced-users-route] INFO enhanced-users-route - User data transformation completed
+[process-users-array-route] INFO process-users-array-route - Processing users array...
+[process-users-array-route] INFO process-users-array-route - Processing user: Leanne Graham (Sincere@april.biz) - Domain: april.biz
+[store-user-database-route] INFO store-user-database-route - === STORING USER IN DATABASE ===
+[store-user-database-route] INFO store-user-database-route - User Type: PERSONAL
+DATABASE INSERT USER (PERSONAL): {id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz, address={street=Kulas Light, suite=Apt. 556, city=Gwenborough, zipcode=92998-3874, geo={lat=-37.3159, lng=81.1496}}, phone=1-770-736-8031 x56442, website=hildegard.org, company={name=Romaguera-Crona, catchPhrase=Multi-layered client-server neural-net, bs=harness real-time e-markets}, processedAt=Fri Feb 27 15:18:33 UTC 2026, source=jsonplaceholder-api, fullAddress=Kulas Light, Gwenborough, Apt. 556 92998-3874, emailDomain=april.biz}
+[store-user-database-route] INFO store-user-database-route - User successfully stored in database
+timeout: sending signal TERM to command ‘mvn’
+
+Test completed. Check test-output.log for details.
+========================================
+
+Verifying API accessibility...
+200
+
+Test 2: Extended API consumption test
+Starting test: Extended API Test
+Duration: 90 seconds
+----------------------------------------
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com.example:camel-rest-consumer >-------------------
+[INFO] Building camel-rest-consumer 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO] 
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-rest-consumer ---
+=== Starting Camel REST API Consumer ===
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is starting
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (started:8)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) started in 1s088ms
+Camel REST Consumer started successfully!
+The application will run for 2 minutes to demonstrate API consumption.
+Press Ctrl+C to stop earlier if needed.
+[enhanced-posts-route] INFO enhanced-posts-route - === Starting Enhanced Posts Fetch ===
+[enhanced-posts-route] INFO enhanced-posts-route - Posts API Response Code: 200
+[enhanced-posts-route] INFO enhanced-posts-route - Successfully received posts data
+[enhanced-posts-route] INFO enhanced-posts-route - Data transformation completed
+[validate-store-route] INFO validate-store-route - Validating transformed data...
+[validate-store-route] INFO validate-store-route - Data validation passed - category field present
+[validate-store-route] INFO validate-store-route - Storing post: SUNT AUT FACERE REPELLAT PROVIDENT OCCAECATI EXCEPTURI OPTIO REPREHENDERIT (Category: PRIORITY)
+[store-database-route] INFO store-database-route - === STORING POST IN DATABASE ===
+DATABASE INSERT: {userId=1, id=1, title=SUNT AUT FACERE REPELLAT PROVIDENT OCCAECATI EXCEPTURI OPTIO REPREHENDERIT, body=quia et suscipit
+suscipit recusandae consequuntur expedita et cum
+reprehenderit molestiae ut ut quas totam
+nostrum rerum est autem sunt rem eveniet architecto, processedAt=Fri Feb 27 15:19:46 UTC 2026, source=jsonplaceholder-api, wordCount=23, category=PRIORITY}
+[store-database-route] INFO store-database-route - Post successfully stored in database
+timeout: sending signal TERM to command ‘mvn’
+
+Test completed. Check test-output.log for details.
+========================================
+
+All tests completed!
+Check the logs above for detailed results.
+
+
+# ------------------------------------------------------------
+# Task 3.4: Manual API Testing
+# ------------------------------------------------------------
+
+$ echo "Testing Posts API..."
+Testing Posts API...
+
+$ curl -X GET "https://jsonplaceholder.typicode.com/posts?_limit=3" \
+ -H "Accept: application/json" \
+ -H "User-Agent: Camel-REST-Consumer/1.0" | jq '.'
+[
+  {
+    "userId": 1,
+    "id": 1,
+    "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+    "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+  },
+  {
+    "userId": 1,
+    "id": 2,
+    "title": "qui est esse",
+    "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
+  },
+  {
+    "userId": 1,
+    "id": 3,
+    "title": "ea molestias quasi exercitationem repellat qui ipsa sit aut",
+    "body": "et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut"
+  }
+]
+
+$ echo "Testing Users API..."
+Testing Users API...
+
+$ curl -X GET "https://jsonplaceholder.typicode.com/users?_limit=2" \
+ -H "Accept: application/json" \
+ -H "User-Agent: Camel-REST-Consumer/1.0" | jq '.'
+[
+  {
+    "id": 1,
+    "name": "Leanne Graham",
+    "username": "Bret",
+    "email": "Sincere@april.biz",
+    "address": {
+      "street": "Kulas Light",
+      "suite": "Apt. 556",
+      "city": "Gwenborough",
+      "zipcode": "92998-3874",
+      "geo": {
+        "lat": "-37.3159",
+        "lng": "81.1496"
+      }
+    },
+    "phone": "1-770-736-8031 x56442",
+    "website": "hildegard.org",
+    "company": {
+      "name": "Romaguera-Crona",
+      "catchPhrase": "Multi-layered client-server neural-net",
+      "bs": "harness real-time e-markets"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Ervin Howell",
+    "username": "Antonette",
+    "email": "Shanna@melissa.tv",
+    "address": {
+      "street": "Victor Plains",
+      "suite": "Suite 879",
+      "city": "Wisokyburgh",
+      "zipcode": "90566-7771",
+      "geo": {
+        "lat": "-43.9509",
+        "lng": "-34.4618"
+      }
+    },
+    "phone": "010-692-6593 x09125",
+    "website": "anastasia.net",
+    "company": {
+      "name": "Deckow-Crist",
+      "catchPhrase": "Proactive didactic contingency",
+      "bs": "synergize scalable supply-chains"
+    }
+  }
+]
+
+$ echo "Testing Single User API..."
+Testing Single User API...
+
+$ curl -X GET "https://jsonplaceholder.typicode.com/users/1" \
+ -H "Accept: application/json" \
+ -H "User-Agent: Camel-REST-Consumer/1.0" | jq '.'
+{
+  "id": 1,
+  "name": "Leanne Graham",
+  "username": "Bret",
+  "email": "Sincere@april.biz",
+  "address": {
+    "street": "Kulas Light",
+    "suite": "Apt. 556",
+    "city": "Gwenborough",
+    "zipcode": "92998-3874",
+    "geo": {
+      "lat": "-37.3159",
+      "lng": "81.1496"
+    }
+  },
+  "phone": "1-770-736-8031 x56442",
+  "website": "hildegard.org",
+  "company": {
+    "name": "Romaguera-Crona",
+    "catchPhrase": "Multi-layered client-server neural-net",
+    "bs": "harness real-time e-markets"
+  }
+}
+
+
+# ------------------------------------------------------------
+# Task 3.7: Compile Everything (Complete Test Application)
+# ------------------------------------------------------------
+
+$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com.example:camel-rest-consumer >-------------------
+[INFO] Building camel-rest-consumer 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-rest-consumer ---
+[INFO] Deleting /home/toor/camel-rest-consumer/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ camel-rest-consumer ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-rest-consumer ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 6 source files to /home/toor/camel-rest-consumer/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.401 s
+[INFO] Finished at: 2026-02-27T15:33:02Z
+[INFO] ------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------
+# Task 3.7: Run Complete Test Application
+# ------------------------------------------------------------
+
+$ mvn exec:java -Dexec.mainClass="com.example.camel.CompleteTestApplication"
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com.example:camel-rest-consumer >-------------------
+[INFO] Building camel-rest-consumer 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO] 
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-rest-consumer ---
+=== Complete Camel REST API Consumer Test ===
+This application demonstrates:
+1. REST API consumption
+2. Data transformation
+3. Error handling
+4. Monitoring and logging
+===============================================
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is starting
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (started:10)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started enhanced-posts-route (timer://enhancedPosts)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started enhanced-users-route (timer://enhancedUsers)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started validate-store-route (direct://validateAndStore)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started process-users-array-route (direct://processUsersArray)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started store-database-route (direct://storeInDatabase)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started store-user-database-route (direct://storeUserInDatabase)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started handle-api-error-route (direct://handleApiError)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started general-error-handler-route (direct://handleError)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started monitoring-route (timer://monitor)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started statistics-route (timer://stats)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) started in 1s332ms
+All routes started successfully!
+Application will run for 3 minutes...
+[enhanced-posts-route] INFO enhanced-posts-route - === Starting Enhanced Posts Fetch ===
+[enhanced-posts-route] INFO enhanced-posts-route - Posts API Response Code: 200
+[enhanced-posts-route] INFO enhanced-posts-route - Successfully received posts data
+[enhanced-posts-route] INFO enhanced-posts-route - Data transformation completed
+[validate-store-route] INFO validate-store-route - Validating transformed data...
+[validate-store-route] INFO validate-store-route - Data validation passed - category field present
+[validate-store-route] INFO validate-store-route - Storing post: SUNT AUT FACERE REPELLAT PROVIDENT OCCAECATI EXCEPTURI OPTIO REPREHENDERIT (Category: PRIORITY)
+[store-database-route] INFO store-database-route - === STORING POST IN DATABASE ===
+DATABASE INSERT: {userId=1, id=1, title=SUNT AUT FACERE REPELLAT PROVIDENT OCCAECATI EXCEPTURI OPTIO REPREHENDERIT, body=quia et suscipit
+suscipit recusandae consequuntur expedita et cum
+reprehenderit molestiae ut ut quas totam
+nostrum rerum est autem sunt rem eveniet architecto, processedAt=Fri Feb 27 15:33:12 UTC 2026, source=jsonplaceholder-api, wordCount=23, category=PRIORITY}
+[store-database-route] INFO store-database-route - Post successfully stored in database
+[monitoring-route] INFO monitoring-route - === API MONITORING CHECK ===
+[monitoring-route] INFO monitoring-route - API Health Check: HEALTHY
+[monitoring-route] INFO monitoring-route - Response time (ms): 167
+[monitoring-route] INFO monitoring-route - === MONITORING CHECK COMPLETE ===
+[enhanced-users-route] INFO enhanced-users-route - === Starting Enhanced Users Fetch ===
+[enhanced-users-route] INFO enhanced-users-route - Users API Response Code: 200
+[enhanced-users-route] INFO enhanced-users-route - Successfully received users data
+[enhanced-users-route] INFO enhanced-users-route - User data transformation completed
+[process-users-array-route] INFO process-users-array-route - Processing users array...
+[process-users-array-route] INFO process-users-array-route - Processing user: Leanne Graham (Sincere@april.biz) - Domain: april.biz
+[store-user-database-route] INFO store-user-database-route - === STORING USER IN DATABASE ===
+[store-user-database-route] INFO store-user-database-route - User Type: PERSONAL
+DATABASE INSERT USER (PERSONAL): {id=1, name=Leanne Graham, username=Bret, email=Sincere@april.biz, address={street=Kulas Light, suite=Apt. 556, city=Gwenborough, zipcode=92998-3874, geo={lat=-37.3159, lng=81.1496}}, phone=1-770-736-8031 x56442, website=hildegard.org, company={name=Romaguera-Crona, catchPhrase=Multi-layered client-server neural-net, bs=harness real-time e-markets}, processedAt=Fri Feb 27 15:33:17 UTC 2026, source=jsonplaceholder-api, fullAddress=Kulas Light, Gwenborough, Apt. 556 92998-3874, emailDomain=april.biz}
+[store-user-database-route] INFO store-user-database-route - User successfully stored in database
+[statistics-route] INFO statistics-route - === COLLECTING API STATISTICS ===
+Total API calls made: 10
+Active routes: 10
+Context status: Started
+[statistics-route] INFO statistics-route - Statistics collection completed
+[monitoring-route] INFO monitoring-route - === API MONITORING CHECK ===
+[monitoring-route] INFO monitoring-route - API Health Check: HEALTHY
+[monitoring-route] INFO monitoring-route - Response time (ms): 142
+[monitoring-route] INFO monitoring-route - === MONITORING CHECK COMPLETE ===
+[monitoring-route] INFO monitoring-route - === API MONITORING CHECK ===
+[monitoring-route] INFO monitoring-route - API Health Check: HEALTHY
+[monitoring-route] INFO monitoring-route - Response time (ms): 151
+[monitoring-route] INFO monitoring-route - === MONITORING CHECK COMPLETE ===
+[statistics-route] INFO statistics-route - === COLLECTING API STATISTICS ===
+Total API calls made: 10
+Active routes: 10
+Context status: Started
+[statistics-route] INFO statistics-route - Statistics collection completed
+=== Stopping Application ===
+Final Statistics:
+- Total routes: 10
+- Context uptime: 3 minutes, 0 seconds
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is shutting down
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes stopped (stopped:10)
+[main] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) shutdown in 211ms
+Application stopped successfully!
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3:03 min
+[INFO] Finished at: 2026-02-27T15:36:09Z
+[INFO] ------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------
+# Troubleshooting Checks Performed
+# ------------------------------------------------------------
+
+$ ping -c 3 jsonplaceholder.typicode.com
+PING jsonplaceholder.typicode.com (104.21.47.206) 56(84) bytes of data.
+64 bytes from 104.21.47.206: icmp_seq=1 ttl=52 time=18.7 ms
+64 bytes from 104.21.47.206: icmp_seq=2 ttl=52 time=19.4 ms
+64 bytes from 104.21.47.206: icmp_seq=3 ttl=52 time=18.9 ms
+
+--- jsonplaceholder.typicode.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 18.712/19.026/19.422/0.301 ms
+
+
+$ curl -I https://jsonplaceholder.typicode.com/posts/1
+HTTP/2 200 
+date: Fri, 27 Feb 2026 15:36:31 GMT
+content-type: application/json; charset=utf-8
+content-length: 292
+x-powered-by: Express
+access-control-allow-origin: https://example.com
+etag: W/"124-yiKdLzqO5gfBrJFrcdJ8Yq0LGnU"
+via: 1.1 vegur
+cf-cache-status: DYNAMIC
+server: cloudflare
+cf-ray: 85a4d7a9ec2f1a6b-FRA
+
+
+$ mvn dependency:resolve
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com.example:camel-rest-consumer >-------------------
+[INFO] Building camel-rest-consumer 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:resolve (default-cli) @ camel-rest-consumer ---
+[INFO] The following files have been resolved:
+[INFO]    org.apache.camel:camel-core:jar:3.20.2:compile
+[INFO]    org.apache.camel:camel-http:jar:3.20.2:compile
+[INFO]    org.apache.camel:camel-jackson:jar:3.20.2:compile
+[INFO]    org.apache.camel:camel-timer:jar:3.20.2:compile
+[INFO]    org.apache.camel:camel-log:jar:3.20.2:compile
+[INFO]    org.slf4j:slf4j-simple:jar:1.7.36:compile
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.874 s
+[INFO] Finished at: 2026-02-27T15:37:12Z
+[INFO] ------------------------------------------------------------------------
