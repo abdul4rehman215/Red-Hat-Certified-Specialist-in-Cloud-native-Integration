@@ -1,0 +1,151 @@
+toor@ip-172-31-10-214:~/camel-testing-lab$ mvn clean compile test
+[INFO] Scanning for projects...
+[INFO]
+[INFO] -------------------< com.example:camel-testing-lab >--------------------
+[INFO] Building camel-testing-lab 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:3.2.0:clean (default-clean) @ camel-testing-lab ---
+[INFO] Deleting /home/toor/camel-testing-lab/target
+[INFO]
+[INFO] --- maven-resources-plugin:3.3.1:resources (default-resources) @ camel-testing-lab ---
+[INFO] skip non existing resourceDirectory /home/toor/camel-testing-lab/src/main/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.11.0:compile (default-compile) @ camel-testing-lab ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to /home/toor/camel-testing-lab/target/classes
+[INFO]
+[INFO] --- maven-resources-plugin:3.3.1:testResources (default-testResources) @ camel-testing-lab ---
+[INFO] skip non existing resourceDirectory /home/toor/camel-testing-lab/src/test/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.11.0:testCompile (default-testCompile) @ camel-testing-lab ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to /home/toor/camel-testing-lab/target/test-classes
+[INFO]
+[INFO] --- maven-surefire-plugin:3.0.0-M9:test (default-test) @ camel-testing-lab ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.camel.OrderProcessingRouteTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.20 s - in com.example.camel.OrderProcessingRouteTest
+[INFO] Running com.example.camel.OrderProcessingIntegrationTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.41 s - in com.example.camel.OrderProcessingIntegrationTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.8 s
+[INFO] Finished at: 2026-02-27T15:02:14Z
+[INFO] ------------------------------------------------------------------------
+
+
+toor@ip-172-31-10-214:~/camel-testing-lab$ mvn test -Dtest=OrderProcessingRouteTest
+[INFO] Scanning for projects...
+[INFO] Building camel-testing-lab 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO]
+[INFO] --- maven-surefire-plugin:3.0.0-M9:test (default-test) @ camel-testing-lab ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.camel.OrderProcessingRouteTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.16 s - in com.example.camel.OrderProcessingRouteTest
+[INFO]
+[INFO] Results:
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+
+
+toor@ip-172-31-10-214:~/camel-testing-lab$ mvn test -Dtest=OrderProcessingIntegrationTest
+[INFO] Scanning for projects...
+[INFO] Building camel-testing-lab 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO]
+[INFO] --- maven-surefire-plugin:3.0.0-M9:test (default-test) @ camel-testing-lab ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.camel.OrderProcessingIntegrationTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.33 s - in com.example.camel.OrderProcessingIntegrationTest
+[INFO]
+[INFO] Results:
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+
+
+toor@ip-172-31-10-214:~/camel-testing-lab$ mvn test -X
+Apache Maven 3.8.7 ...
+Maven home: /usr/share/maven
+Java version: 17.0.10, vendor: Ubuntu, runtime: /usr/lib/jvm/java-17-openjdk-amd64
+...
+[DEBUG] === REACTOR BUILD PLAN ================================================
+[DEBUG] Project: com.example:camel-testing-lab:jar:1.0.0
+[DEBUG] Tasks:   [test]
+[DEBUG] ===============================================================================
+...
+[DEBUG] Using JUnit Platform Provider
+...
+[INFO] Running com.example.camel.OrderProcessingRouteTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Running com.example.camel.OrderProcessingIntegrationTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+
+
+toor@ip-172-31-10-214:~/camel-testing-lab$ mvn surefire-report:report
+[INFO] Scanning for projects...
+[INFO] Building camel-testing-lab 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO]
+[INFO] --- maven-surefire-report-plugin:3.0.0-M9:report (default-cli) @ camel-testing-lab ---
+[INFO] Rendering content with org.apache.maven.surefire.report.SurefireReportRenderer
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.2 s
+[INFO] Finished at: 2026-02-27T15:03:01Z
+[INFO] ------------------------------------------------------------------------
+
+
+toor@ip-172-31-10-214:~/camel-testing-lab$ ls -la target/site
+total 16
+drwxr-xr-x  3 toor toor 4096 Feb 27 15:03 .
+drwxr-xr-x 10 toor toor 4096 Feb 27 15:03 ..
+drwxr-xr-x  2 toor toor 4096 Feb 27 15:03 surefire-report.html
+
+
+toor@ip-172-31-10-214:~/camel-testing-lab$ ./run-tests.sh
+=== Running Camel Route Tests ===
+Cleaning and compiling project...
+[INFO] Scanning for projects...
+[INFO] Building camel-testing-lab 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO] ... (compile output)
+[INFO] BUILD SUCCESS
+
+Running unit tests...
+[INFO] Running com.example.camel.OrderProcessingRouteTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+
+Running integration tests...
+[INFO] Running com.example.camel.OrderProcessingIntegrationTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+
+Generating test report...
+[INFO] ... (report generation output)
+[INFO] BUILD SUCCESS
+
+Test execution completed!
+Check target/surefire-reports/ for detailed test results
