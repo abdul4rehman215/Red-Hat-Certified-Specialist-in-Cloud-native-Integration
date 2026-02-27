@@ -1,0 +1,88 @@
+toor@ip-172-31-10-240:~$ cd /home/student/workspace
+-bash: cd: /home/student/workspace: No such file or directory
+
+toor@ip-172-31-10-240:~$ mkdir -p /home/toor/workspace
+toor@ip-172-31-10-240:~$ cd /home/toor/workspace
+toor@ip-172-31-10-240:~/workspace$ pwd
+/home/toor/workspace
+
+toor@ip-172-31-10-240:~/workspace$ mkdir camel-distributed-transactions
+toor@ip-172-31-10-240:~/workspace$ cd camel-distributed-transactions
+toor@ip-172-31-10-240:~/workspace/camel-distributed-transactions$
+
+toor@ip-172-31-10-240:~/workspace/camel-distributed-transactions$ mvn clean package -DskipTests
+[INFO] Scanning for projects...
+[INFO] -----------< com.alnafi.camel:camel-distributed-transactions >-----------
+[INFO] Building camel-distributed-transactions 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO]
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-distributed-transactions ---
+[INFO] Compiling 9 source files to /home/toor/workspace/camel-distributed-transactions/target/classes
+[INFO] --- spring-boot-maven-plugin:2.7.8:repackage (repackage) @ camel-distributed-transactions ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+toor@ip-172-31-10-240:~/workspace/camel-distributed-transactions$ java -jar target/camel-distributed-transactions-1.0.0.jar
+Database initialized successfully
+19:02:11.220 [main] INFO  org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) started in 612ms
+19:02:11.463 [main] INFO  o.s.b.w.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http)
+19:02:11.466 [main] INFO  com.alnafi.camel.transactions.CamelTransactionApplication - Started CamelTransactionApplication in 4.982 seconds
+
+toor@ip-172-31-10-240:~$ curl -s -X POST http://localhost:8080/api/test/send-valid-order
+Valid order sent successfully
+
+19:03:05.018 [Camel (camel-1) thread #1 - JmsConsumer[orders]] INFO  orderProcessingRoute - Received order: {"customerName":"John Doe","productName":"Laptop","quantity":2,"price":999.99,"status":"PENDING","id":null,"createdAt":null}
+19:03:05.036 [Camel (camel-1) thread #1 - JmsConsumer[orders]] INFO  validateOrderRoute - Order validation passed
+19:03:05.082 [Camel (camel-1) thread #1 - JmsConsumer[orders]] INFO  processOrderRoute - Order saved to database
+19:03:05.115 [Camel (camel-1) thread #1 - JmsConsumer[orders]] INFO  updateInventoryRoute - Inventory updated successfully
+19:03:05.132 [Camel (camel-1) thread #1 - JmsConsumer[orders]] INFO  sendConfirmationRoute - Order confirmation sent
+
+toor@ip-172-31-10-240:~$ curl -s http://localhost:8080/api/test/orders | head
+[{"ID":1,"CUSTOMER_NAME":"John Doe","PRODUCT_NAME":"Laptop","QUANTITY":2,"PRICE":999.99,"STATUS":"CONFIRMED","CREATED_AT":"2026-02-27T19:03:05.070+00:00"}]
+
+toor@ip-172-31-10-240:~$ curl -s http://localhost:8080/api/test/inventory | grep Laptop
+{"ID":1,"PRODUCT_NAME":"Laptop","AVAILABLE_QUANTITY":8,"RESERVED_QUANTITY":2,"UPDATED_AT":"2026-02-27T19:02:11.000+00:00"}
+
+toor@ip-172-31-10-240:~$ curl -s -X POST http://localhost:8080/api/test/send-invalid-order
+Invalid order sent successfully
+
+19:04:14.101 [Camel (camel-1) thread #2 - JmsConsumer[orders]] INFO  orderProcessingRoute - Received order: {"customerName":"Jane Smith","productName":"NonExistentProduct","quantity":1,"price":100.00,"status":"PENDING","id":null,"createdAt":null}
+19:04:14.109 [Camel (camel-1) thread #2 - JmsConsumer[orders]] INFO  validateOrderRoute - Order validation passed
+19:04:14.148 [Camel (camel-1) thread #2 - JmsConsumer[orders]] INFO  processOrderRoute - Order saved to database
+19:04:14.151 [Camel (camel-1) thread #2 - JmsConsumer[orders]] INFO  updateInventoryRoute - Updating inventory for product: NonExistentProduct
+19:04:14.156 [Camel (camel-1) thread #2 - JmsConsumer[orders]] INFO  updateInventoryRoute - Insufficient inventory for product: NonExistentProduct
+19:04:14.157 [Camel (camel-1) thread #2 - JmsConsumer[orders]] INFO  org.apache.camel.processor.errorhandler.DefaultErrorHandler - Transaction rollback
+19:04:14.158 [Camel (camel-1) thread #2 - JmsConsumer[orders]] INFO  orderProcessingRoute - Transaction failed, rolling back: Insufficient inventory
+
+toor@ip-172-31-10-240:~$ curl -s http://localhost:8080/api/test/orders
+[{"ID":1,"CUSTOMER_NAME":"John Doe","PRODUCT_NAME":"Laptop","QUANTITY":2,"PRICE":999.99,"STATUS":"CONFIRMED","CREATED_AT":"2026-02-27T19:03:05.070+00:00"}]
+
+toor@ip-172-31-10-240:~$ curl -s -X POST http://localhost:8080/api/test/send-insufficient-inventory-order
+Insufficient inventory order sent successfully
+
+19:05:22.204 [Camel (camel-1) thread #3 - JmsConsumer[orders]] INFO  orderProcessingRoute - Received order: {"customerName":"Bob Johnson","productName":"Monitor","quantity":20,"price":299.99,"status":"PENDING","id":null,"createdAt":null}
+19:05:22.210 [Camel (camel-1) thread #3 - JmsConsumer[orders]] INFO  validateOrderRoute - Order validation passed
+19:05:22.251 [Camel (camel-1) thread #3 - JmsConsumer[orders]] INFO  processOrderRoute - Order saved to database
+19:05:22.255 [Camel (camel-1) thread #3 - JmsConsumer[orders]] INFO  updateInventoryRoute - Insufficient inventory for product: Monitor
+19:05:22.256 [Camel (camel-1) thread #3 - JmsConsumer[orders]] INFO  org.apache.camel.processor.errorhandler.DefaultErrorHandler - Transaction rollback
+
+toor@ip-172-31-10-240:~$ curl -s http://localhost:8080/api/test/inventory | grep Monitor
+{"ID":4,"PRODUCT_NAME":"Monitor","AVAILABLE_QUANTITY":8,"RESERVED_QUANTITY":0,"UPDATED_AT":"2026-02-27T19:02:11.000+00:00"}
+
+toor@ip-172-31-10-240:~$ curl -s -X POST http://localhost:8080/api/test/send-invalid-data-order
+Invalid data order sent successfully
+
+19:06:10.400 [Camel (camel-1) thread #4 - JmsConsumer[orders]] INFO  validateOrderRoute - Order validation failed: Customer name is required
+19:06:10.401 [Camel (camel-1) thread #4 - JmsConsumer[orders]] INFO  org.apache.camel.processor.errorhandler.DefaultErrorHandler - Transaction rollback
+19:06:10.402 [Camel (camel-1) thread #4 - JmsConsumer[orders]] INFO  orderProcessingRoute - Transaction failed, rolling back: Order validation failed
+
+toor@ip-172-31-10-240:~$ curl -s http://localhost:8080/api/test/audit-log | head
+[{"ID":6,"OPERATION":"ROLLBACK","TABLE_NAME":"transaction","DETAILS":"Order validation failed","TRANSACTION_ID":"...","CREATED_AT":"2026-02-27T19:06:10.402+00:00"},
+{"ID":5,"OPERATION":"ROLLBACK","TABLE_NAME":"transaction","DETAILS":"Insufficient inventory","TRANSACTION_ID":"...","CREATED_AT":"2026-02-27T19:05:22.256+00:00"},
+{"ID":4,"OPERATION":"UPDATE","TABLE_NAME":"inventory","DETAILS":"Inventory updated","TRANSACTION_ID":"...","CREATED_AT":"2026-02-27T19:03:05.116+00:00"},
+{"ID":3,"OPERATION":"INSERT","TABLE_NAME":"orders","DETAILS":"Order created","TRANSACTION_ID":"...","CREATED_AT":"2026-02-27T19:03:05.083+00:00"}]
+
+toor@ip-172-31-10-240:~$ curl -s -X POST http://localhost:8080/api/test/reset-data
+Test data reset successfully
