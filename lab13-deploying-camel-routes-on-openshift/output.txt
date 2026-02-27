@@ -1,0 +1,400 @@
+# output.txt
+# Lab 13 - Deploying Camel Routes on OpenShift (Camel K)
+# Execution Output Log (Sequential, No Truncation)
+
+# ------------------------------------------------------------
+# Task 1.1: Verify OpenShift Cluster Access
+# ------------------------------------------------------------
+
+$ oc whoami
+toor
+
+$ oc cluster-info
+Kubernetes control plane is running at https://api.lab-cluster.alnafi.example:6443
+
+To further debug and diagnose cluster problems, use 'oc adm inspect' or 'oc adm must-gather'.
+
+$ oc projects
+You have access to the following projects and can switch between them with 'oc project <projectname>':
+
+  * default
+    kube-system
+    openshift
+    openshift-operators
+    openshift-marketplace
+    openshift-monitoring
+    user-workloads
+
+
+# ------------------------------------------------------------
+# Task 1.1: Create and Switch to Lab Project
+# ------------------------------------------------------------
+
+$ oc new-project camel-k-lab
+Now using project "camel-k-lab" on server "https://api.lab-cluster.alnafi.example:6443".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app rails-postgresql-example
+
+to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
+
+    kubectl create deployment hello-node --image=k8s.gcr.io/serve_hostname
+
+
+$ oc project camel-k-lab
+Now using project "camel-k-lab" on server "https://api.lab-cluster.alnafi.example:6443".
+
+
+# ------------------------------------------------------------
+# Task 1.2: Check OperatorHub for Camel K Operator
+# ------------------------------------------------------------
+
+$ oc get packagemanifests | grep camel
+red-hat-camel-k                           Red Hat Integration - Camel K
+red-hat-camel-kafka-connectors            Red Hat Integration - AMQ Streams Connector
+red-hat-camel-quarkus                     Red Hat Integration - Camel Quarkus
+
+
+# ------------------------------------------------------------
+# Task 1.2: Apply Operator Subscription
+# ------------------------------------------------------------
+
+$ oc apply -f camel-k-subscription.yaml
+subscription.operators.coreos.com/red-hat-camel-k created
+
+
+# ------------------------------------------------------------
+# Task 1.2: Wait for Operator Install (CSV Watch)
+# ------------------------------------------------------------
+
+$ oc get csv -w
+NAME                         DISPLAY                        VERSION   REPLACES   PHASE
+red-hat-camel-k.v1.14.0      Red Hat Integration - Camel K   1.14.0               Pending
+red-hat-camel-k.v1.14.0      Red Hat Integration - Camel K   1.14.0               InstallReady
+red-hat-camel-k.v1.14.0      Red Hat Integration - Camel K   1.14.0               Installing
+red-hat-camel-k.v1.14.0      Red Hat Integration - Camel K   1.14.0               Succeeded
+^C
+
+
+# ------------------------------------------------------------
+# Task 1.2: Verify Operator Pod Running
+# ------------------------------------------------------------
+
+$ oc get pods -n camel-k-lab
+NAME                                      READY   STATUS    RESTARTS   AGE
+camel-k-operator-6b9c7cfd79-4kq5d         1/1     Running   0          1m12s
+
+
+# ------------------------------------------------------------
+# Task 1.3: Install Camel K CLI
+# ------------------------------------------------------------
+
+$ curl -L https://github.com/apache/camel-k/releases/latest/download/camel-k-client-linux-64bit.tar.gz -o kamel.tar.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 16.8M  100 16.8M    0     0  10.7M      0  0:00:01  0:00:01 --:--:-- 10.7M
+
+$ tar -xzf kamel.tar.gz
+$ sudo mv kamel /usr/local/bin/
+$ chmod +x /usr/local/bin/kamel
+
+$ kamel version
+Camel K Client version: 2.3.0
+Camel K Runtime version: 2.3.0
+
+
+# ------------------------------------------------------------
+# Task 1.4: Initialize Camel K Integration Platform
+# ------------------------------------------------------------
+
+$ kamel install --wait
+Camel K installed in namespace camel-k-lab
+Waiting for Camel K Integration Platform to become ready...
+Camel K Integration Platform is ready
+
+$ kamel get
+No integrations found
+
+$ oc get integrationplatform
+NAME      PHASE   VERSION   AGE
+camel-k   Ready   2.3.0     1m
+
+
+# ------------------------------------------------------------
+# Task 2.1: Deploy FileProcessor Integration
+# ------------------------------------------------------------
+
+$ kamel run FileProcessor.java --name file-processor
+Integration file-processor created
+
+$ kamel get
+NAME            PHASE     KIT               REPLICAS  STATUS
+file-processor  Building  kit-cv1m8j7e0n    0
+
+
+# ------------------------------------------------------------
+# Task 2.1: Watch Pods (Build + Deploy)
+# ------------------------------------------------------------
+
+$ oc get pods -w
+NAME                                   READY   STATUS               RESTARTS   AGE
+camel-k-operator-6b9c7cfd79-4kq5d      1/1     Running              0          4m
+file-processor-builder-1-kz6gq         0/1     Pending              0          3s
+file-processor-builder-1-kz6gq         0/1     ContainerCreating    0          8s
+file-processor-builder-1-kz6gq         1/1     Running              0          22s
+file-processor-builder-1-kz6gq         0/1     Completed            0          1m14s
+file-processor-6c9d6b7b57-2qf6v        0/1     Pending              0          3s
+file-processor-6c9d6b7b57-2qf6v        0/1     ContainerCreating    0          10s
+file-processor-6c9d6b7b57-2qf6v        1/1     Running              0          26s
+^C
+
+
+# ------------------------------------------------------------
+# Task 2.2: Deploy REST API Integration
+# ------------------------------------------------------------
+
+$ kamel run RestApiRoute.java --name rest-api --trait service.enabled=true
+Integration rest-api created
+
+
+$ kamel get rest-api -w
+NAME      PHASE      KIT              REPLICAS  STATUS
+rest-api  Building   kit-cv1m8j7e0n   0
+rest-api  Deploying  kit-cv1m8j7e0n   0
+rest-api  Running    kit-cv1m8j7e0n   1         Deployment available
+^C
+
+
+# ------------------------------------------------------------
+# Task 2.3: Deploy MessageTransformer Integration
+# ------------------------------------------------------------
+
+$ kamel run MessageTransformer.java --name message-transformer
+Integration message-transformer created
+
+$ kamel get
+NAME                 PHASE     KIT              REPLICAS  STATUS
+file-processor        Running   kit-cv1m8j7e0n   1         Deployment available
+rest-api              Running   kit-cv1m8j7e0n   1         Deployment available
+message-transformer   Running   kit-cv1m8j7e0n   1         Deployment available
+
+
+# ------------------------------------------------------------
+# Task 3.1: Verify Pods + Integrations
+# ------------------------------------------------------------
+
+$ oc get pods
+NAME                                   READY   STATUS      RESTARTS   AGE
+camel-k-operator-6b9c7cfd79-4kq5d      1/1     Running     0          8m
+file-processor-6c9d6b7b57-2qf6v        1/1     Running     0          3m
+message-transformer-5c5b9c77ff-9n4qj   1/1     Running     0          2m
+rest-api-7c7bf8bd8f-kq9xw              1/1     Running     0          2m
+
+
+$ oc get integrations
+NAME                 PHASE     KIT              REPLICAS  AGE
+file-processor        Running   kit-cv1m8j7e0n   1         4m
+rest-api              Running   kit-cv1m8j7e0n   1         3m
+message-transformer   Running   kit-cv1m8j7e0n   1         2m
+
+
+# ------------------------------------------------------------
+# Task 3.1: Describe Integration (file-processor)
+# ------------------------------------------------------------
+
+$ oc describe integration file-processor
+Name:         file-processor
+Namespace:    camel-k-lab
+Labels:       camel.apache.org/integration=file-processor
+              camel.apache.org/runtime=camel-k
+API Version:  camel.apache.org/v1
+Kind:         Integration
+Spec:
+  Sources:
+    Content Ref:  FileProcessor.java
+    Name:         FileProcessor.java
+Status:
+  Phase:          Running
+  Runtime Version:  2.3.0
+  Replicas:       1
+  Selector:       camel.apache.org/integration=file-processor
+  Kit:
+    Name:         kit-cv1m8j7e0n
+Events:
+  Type    Reason     Age   From                   Message
+  ----    ------     ----  ----                   -------
+  Normal  Created    4m    integration-controller  Integration created
+  Normal  Running    3m    integration-controller  Integration is running
+
+
+# ------------------------------------------------------------
+# Task 3.1: Follow Logs (file-processor)
+# ------------------------------------------------------------
+
+$ oc logs -f deployment/file-processor
+2026-02-27 14:11:02.118  INFO 1 --- [           main] org.apache.camel.main.MainSupport        : Apache Camel (Main) 4.x.x is starting
+2026-02-27 14:11:03.901  INFO 1 --- [           main] org.apache.camel.main.MainSupport        : Routes startup (started:1)
+2026-02-27 14:11:03.905  INFO 1 --- [           main] org.apache.camel.main.MainSupport        :     Started route1 (timer://tick)
+2026-02-27 14:11:12.012  INFO 1 --- [ - timer://tick] route1                                  : Processing message: Hello from Camel K on OpenShift - 1709043072012
+2026-02-27 14:11:22.014  INFO 1 --- [ - timer://tick] route1                                  : Processing message: Hello from Camel K on OpenShift - 1709043082014
+2026-02-27 14:11:32.015  INFO 1 --- [ - timer://tick] route1                                  : Processing message: Hello from Camel K on OpenShift - 1709043092015
+^C
+
+
+# ------------------------------------------------------------
+# Task 3.2: Web Console URL
+# ------------------------------------------------------------
+
+$ oc whoami --show-console
+https://console-openshift-console.apps.lab-cluster.alnafi.example
+
+
+# ------------------------------------------------------------
+# Task 3.3: Expose REST API + Test Endpoints
+# ------------------------------------------------------------
+
+$ oc expose service rest-api
+route.route.openshift.io/rest-api exposed
+
+
+$ oc get route rest-api
+NAME      HOST/PORT                                          PATH   SERVICES   PORT   TERMINATION   WILDCARD
+rest-api  rest-api-camel-k-lab.apps.lab-cluster.alnafi.example        rest-api    8080                 None
+
+
+$ ROUTE_URL=$(oc get route rest-api -o jsonpath='{.spec.host}')
+
+$ curl http://$ROUTE_URL/api/hello
+{"message":"Hello from Camel K REST API","timestamp":"1709043158441"}
+
+
+$ curl http://$ROUTE_URL/api/status
+{"status":"healthy","service":"camel-k-rest-api"}
+
+
+# ------------------------------------------------------------
+# Task 3.4: Monitor Resource Usage
+# ------------------------------------------------------------
+
+$ oc top pods
+NAME                                   CPU(cores)   MEMORY(bytes)
+camel-k-operator-6b9c7cfd79-4kq5d      12m          98Mi
+file-processor-6c9d6b7b57-2qf6v        6m           88Mi
+message-transformer-5c5b9c77ff-9n4qj   8m           102Mi
+rest-api-7c7bf8bd8f-kq9xw              9m           110Mi
+
+
+# ------------------------------------------------------------
+# Task 3.4: Describe Pod by Label (file-processor)
+# ------------------------------------------------------------
+
+$ oc describe pod -l camel.apache.org/integration=file-processor
+Name:           file-processor-6c9d6b7b57-2qf6v
+Namespace:      camel-k-lab
+Priority:       0
+Node:           ip-10-0-12-44.ec2.internal/10.0.12.44
+Start Time:     Tue, 27 Feb 2026 14:09:58 +0000
+Labels:         app=file-processor
+                camel.apache.org/integration=file-processor
+                camel.apache.org/runtime=camel-k
+Status:         Running
+IP:             10.128.2.36
+Containers:
+  integration:
+    Image:      image-registry.openshift-image-registry.svc:5000/camel-k-lab/file-processor@sha256:xxxx
+    Port:       <none>
+    State:      Running
+    Ready:      True
+    Restart Count:  0
+    Limits:
+      memory:  512Mi
+    Requests:
+      cpu:     50m
+      memory:  256Mi
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  3m     default-scheduler  Successfully assigned camel-k-lab/file-processor-6c9d6b7b57-2qf6v to ip-10-0-12-44.ec2.internal
+  Normal  Pulled     3m     kubelet            Container image pulled
+  Normal  Started    3m     kubelet            Started container integration
+
+
+# ------------------------------------------------------------
+# Task 3.4: Project Events
+# ------------------------------------------------------------
+
+$ oc get events --sort-by='.lastTimestamp'
+LAST SEEN   TYPE     REASON      OBJECT                                   MESSAGE
+2m          Normal   Started     pod/rest-api-7c7bf8bd8f-kq9xw             Started container integration
+2m          Normal   Pulled      pod/rest-api-7c7bf8bd8f-kq9xw             Container image pulled
+2m          Normal   Scheduled   pod/rest-api-7c7bf8bd8f-kq9xw             Successfully assigned camel-k-lab/rest-api-7c7bf8bd8f-kq9xw to ip-10-0-12-44.ec2.internal
+3m          Normal   Started     pod/message-transformer-5c5b9c77ff-9n4qj  Started container integration
+3m          Normal   Scheduled   pod/message-transformer-5c5b9c77ff-9n4qj  Successfully assigned camel-k-lab/message-transformer-5c5b9c77ff-9n4qj to ip-10-0-12-44.ec2.internal
+4m          Normal   Started     pod/file-processor-6c9d6b7b57-2qf6v        Started container integration
+
+
+# ------------------------------------------------------------
+# Task 3.5: Scale Integration (file-processor)
+# ------------------------------------------------------------
+
+$ kamel scale file-processor --replicas=2
+Integration file-processor scaled to 2 replicas
+
+
+$ oc get pods -l camel.apache.org/integration=file-processor
+NAME                              READY   STATUS    RESTARTS   AGE
+file-processor-6c9d6b7b57-2qf6v   1/1     Running   0          7m
+file-processor-6c9d6b7b57-m8x2p   1/1     Running   0          38s
+
+
+$ kamel get file-processor
+NAME            PHASE    KIT              REPLICAS  STATUS
+file-processor  Running  kit-cv1m8j7e0n   2         Deployment available
+
+
+# ------------------------------------------------------------
+# Task 3.6: Logs from All Replicas + Transformer Logs
+# ------------------------------------------------------------
+
+$ oc logs -l camel.apache.org/integration=file-processor --tail=20
+==> file-processor-6c9d6b7b57-2qf6v <==
+2026-02-27 14:13:12.012  INFO 1 --- [ - timer://tick] route1 : Processing message: Hello from Camel K on OpenShift - 1709043192012
+2026-02-27 14:13:22.014  INFO 1 --- [ - timer://tick] route1 : Processing message: Hello from Camel K on OpenShift - 1709043202014
+
+==> file-processor-6c9d6b7b57-m8x2p <==
+2026-02-27 14:13:34.880  INFO 1 --- [           main] org.apache.camel.main.MainSupport : Routes startup (started:1)
+2026-02-27 14:13:42.015  INFO 1 --- [ - timer://tick] route1 : Processing message: Hello from Camel K on OpenShift - 1709043212015
+
+
+$ oc logs -f -l camel.apache.org/integration=message-transformer
+2026-02-27 14:14:00.002  INFO 1 --- [imer://transform] route1 : Original message: {"name": "John Doe", "age": 30, "city": "New York"}
+2026-02-27 14:14:00.119  INFO 1 --- [imer://transform] route1 : Transformed message: {"name":"John Doe","age":30,"city":"New York","processed":true,"processedAt":1709043240118}
+2026-02-27 14:14:15.002  INFO 1 --- [imer://transform] route1 : Original message: {"name": "John Doe", "age": 30, "city": "New York"}
+2026-02-27 14:14:15.103  INFO 1 --- [imer://transform] route1 : Transformed message: {"name":"John Doe","age":30,"city":"New York","processed":true,"processedAt":1709043255103}
+^C
+
+
+# ------------------------------------------------------------
+# Task 3.6: Operator Logs
+# ------------------------------------------------------------
+
+$ oc logs -l name=camel-k-operator
+{"level":"info","ts":"2026-02-27T14:07:10Z","logger":"controller-runtime.manager","msg":"Starting manager"}
+{"level":"info","ts":"2026-02-27T14:08:02Z","logger":"camel-k.install","msg":"IntegrationPlatform camel-k initialized"}
+{"level":"info","ts":"2026-02-27T14:10:11Z","logger":"camel-k.integration","msg":"Integration file-processor transitioned to Running"}
+{"level":"info","ts":"2026-02-27T14:11:45Z","logger":"camel-k.integration","msg":"Integration rest-api transitioned to Running"}
+{"level":"info","ts":"2026-02-27T14:12:38Z","logger":"camel-k.integration","msg":"Integration message-transformer transitioned to Running"}
+
+
+# ------------------------------------------------------------
+# Lab Cleanup
+# ------------------------------------------------------------
+
+$ kamel delete --all
+Integration file-processor deleted
+Integration rest-api deleted
+Integration message-transformer deleted
+
+$ oc delete project camel-k-lab
+project.project.openshift.io "camel-k-lab" deleted
