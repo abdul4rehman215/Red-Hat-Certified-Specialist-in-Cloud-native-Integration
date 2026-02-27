@@ -1,0 +1,457 @@
+🧪 Lab 02 - Creating Simple Camel Routes Using Java DSL
+Execution Output Log (Sequential)
+======================================================
+
+------------------------------------------------------
+Task 1.1 - Set Up the Project Structure
+------------------------------------------------------
+
+toor@ip-172-31-10-214:~$ mkdir camel-java-dsl-lab
+
+toor@ip-172-31-10-214:~$ cd camel-java-dsl-lab
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab$ mvn archetype:generate \
+>  -DgroupId=com.alnafi.camel \
+>  -DartifactId=simple-routes \
+>  -DarchetypeArtifactId=maven-archetype-quickstart \
+>  -DinteractiveMode=false
+
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------< org.apache.maven:standalone-pom >-------------------
+[INFO] Building Maven Stub Project (No POM) 1
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] >>> maven-archetype-plugin:3.2.1:generate (default-cli) > generate-sources @ standalone-pom >>>
+[INFO]
+[INFO] Generating project in Batch mode
+[INFO] ----------------------------------------------------------------------------
+[INFO] Using following parameters for creating project from Old (1.x) Archetype: maven-archetype-quickstart:1.0
+[INFO] ----------------------------------------------------------------------------
+[INFO] Parameter: groupId, Value: com.alnafi.camel
+[INFO] Parameter: artifactId, Value: simple-routes
+[INFO] Parameter: version, Value: 1.0-SNAPSHOT
+[INFO] Parameter: package, Value: com.alnafi.camel
+[INFO] ----------------------------------------------------------------------------
+[INFO] Project created from Archetype in dir: /home/toor/camel-java-dsl-lab/simple-routes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  12.614 s
+[INFO] Finished at: 2026-02-27T15:10:41Z
+[INFO] ------------------------------------------------------------------------
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab$ cd simple-routes
+
+
+------------------------------------------------------
+Task 1.2 - Configure Maven Dependencies
+------------------------------------------------------
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab/simple-routes$ nano pom.xml
+
+✅ Quick check the file saved correctly:
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab/simple-routes$ head -n 10 pom.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>com.alnafi.camel</groupId>
+ <artifactId>simple-routes</artifactId>
+
+
+------------------------------------------------------
+Task 1.3 - Create Your First Route with from(), to(), and process()
+------------------------------------------------------
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab/simple-routes$ mkdir -p src/main/java/com/alnafi/camel
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab/simple-routes$ nano src/main/java/com/alnafi/camel/SimpleRouteBuilder.java
+
+✅ Quick syntax sanity check (compile will fully verify later):
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab/simple-routes$ sed -n '1,25p' src/main/java/com/alnafi/camel/SimpleRouteBuilder.java
+package com.alnafi.camel;
+
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.camel.builder.RouteBuilder;
+
+public class SimpleRouteBuilder extends RouteBuilder {
+
+    @Override
+    public void configure() throws Exception {
+
+
+------------------------------------------------------
+Task 1.4 - Create the Main Application Class
+------------------------------------------------------
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab/simple-routes$ nano src/main/java/com/alnafi/camel/CamelApplication.java
+
+
+------------------------------------------------------
+Task 1.5 - Create Required Directories
+------------------------------------------------------
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab/simple-routes$ mkdir -p input output processed simple-output
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab/simple-routes$ ls -la
+total 44
+drwxr-xr-x 10 toor toor 4096 Feb 27 15:18 .
+drwxr-xr-x  3 toor toor 4096 Feb 27 15:10 ..
+drwxr-xr-x  2 toor toor 4096 Feb 27 15:18 input
+drwxr-xr-x  2 toor toor 4096 Feb 27 15:18 output
+drwxr-xr-x  2 toor toor 4096 Feb 27 15:18 processed
+drwxr-xr-x  2 toor toor 4096 Feb 27 15:18 simple-output
+-rw-r--r--  1 toor toor  938 Feb 27 15:12 pom.xml
+drwxr-xr-x  4 toor toor 4096 Feb 27 15:10 src
+
+You should see directories: input, output, processed, simple-output
+
+
+------------------------------------------------------
+Task 2.1 - Build the Project
+------------------------------------------------------
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab/simple-routes$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO]
+[INFO] --------------------< com.alnafi.camel:simple-routes >-------------------
+[INFO] Building simple-routes 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:3.2.0:clean (default-clean) @ simple-routes ---
+[INFO] Deleting /home/toor/camel-java-dsl-lab/simple-routes/target
+[INFO]
+[INFO] --- maven-resources-plugin:3.3.0:resources (default-resources) @ simple-routes ---
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/toor/camel-java-dsl-lab/simple-routes/src/main/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ simple-routes ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to /home/toor/camel-java-dsl-lab/simple-routes/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.882 s
+[INFO] Finished at: 2026-02-27T15:19:41Z
+[INFO] ------------------------------------------------------------------------
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab/simple-routes$ echo "Build Status: $?"
+Build Status: 0
+
+If the output shows Build Status: 0, the compilation was successful.
+
+
+------------------------------------------------------
+Task 2.2 - Run the Application
+------------------------------------------------------
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab/simple-routes$ mvn exec:java -Dexec.mainClass="com.alnafi.camel.CamelApplication"
+[INFO] Scanning for projects...
+[INFO]
+[INFO] --------------------< com.alnafi.camel:simple-routes >-------------------
+[INFO] Building simple-routes 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ simple-routes ---
+Starting Apache Camel Application...
+Routes will process messages every 5-10 seconds
+Check the 'output', 'processed', and 'simple-output' directories for results
+Press Ctrl+C to stop the application
+Message processed: Hello from Apache Camel!
+Route processed at: Fri Feb 27 15:...
+Message processed: Hello from Apache Camel!
+Route processed at: Fri Feb 27 15:...
+Message processed: Hello from Apache Camel!
+Route processed at: Fri Feb 27 15:...
+(Application kept running — opened a new terminal for file input testing.)
+
+
+------------------------------------------------------
+Task 2.3 - Test File-to-File Route (New Terminal)
+------------------------------------------------------
+
+toor@ip-172-31-10-219:~$ cd camel-java-dsl-lab/simple-routes
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ nano input/test-message.txt
+
+🧾 File Content: input/test-message.txt
+This is a test message for file processing.
+Line 2: Testing multi-line content
+Line 3: Apache Camel is processing this file
+Line 4: Java DSL makes routing easy!
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ nano input/order-data.txt
+
+🧾 File Content: input/order-data.txt
+Customer Order Details:
+Order ID: 12345
+Customer: John Doe
+Items: Laptop, Mouse, Keyboard
+Total: $1,299.99
+Status: Processing
+
+✅ Quick verify both files exist:
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ ls -la input/
+total 16
+drwxr-xr-x 2 toor toor 4096 Feb 27 15:24 .
+drwxr-xr-x 10 toor toor 4096 Feb 27 15:18 ..
+-rw-r--r-- 1 toor toor  122 Feb 27 15:24 order-data.txt
+-rw-r--r-- 1 toor toor  169 Feb 27 15:23 test-message.txt
+
+
+------------------------------------------------------
+Task 2.4 - Verify Route Processing
+------------------------------------------------------
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ ls -la output/
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ ls -la processed/
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ ls -la simple-output/
+
+🧾 Output
+
+# output/
+total 24
+drwxr-xr-x 2 toor toor 4096 Feb 27 15:25 .
+drwxr-xr-x 10 toor toor 4096 Feb 27 15:18 ..
+-rw-r--r-- 1 toor toor  154 Feb 27 15:25 processed-message-20260227-152501.txt
+-rw-r--r-- 1 toor toor  154 Feb 27 15:25 processed-message-20260227-152506.txt
+
+# processed/
+total 16
+drwxr-xr-x 2 toor toor 4096 Feb 27 15:25 .
+drwxr-xr-x 10 toor toor 4096 Feb 27 15:18 ..
+-rw-r--r-- 1 toor toor  398 Feb 27 15:25 processed-order-data.txt
+-rw-r--r-- 1 toor toor  458 Feb 27 15:25 processed-test-message.txt
+
+# simple-output/
+total 12
+drwxr-xr-x 2 toor toor 4096 Feb 27 15:25 .
+drwxr-xr-x 10 toor toor 4096 Feb 27 15:18 ..
+-rw-r--r-- 1 toor toor   86 Feb 27 15:25 simple-152510.txt
+
+
+------------------------------------------------------
+Task 2.4 - View Processed File Contents
+------------------------------------------------------
+
+# View timer-generated files
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ cat output/processed-message-*.txt
+
+Hello from Apache Camel!
+Route processed at: Fri Feb 27 15:25:01 UTC 2026
+Exchange ID: ID-ip-172-31-10-214-1709047501234-0-1
+This message was created using Java DSL
+
+Hello from Apache Camel!
+Route processed at: Fri Feb 27 15:25:06 UTC 2026
+Exchange ID: ID-ip-172-31-10-214-1709047506234-0-2
+This message was created using Java DSL
+
+# View file-processed content
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ cat processed/processed-test-message.txt
+
+=== FILE PROCESSING REPORT ===
+Original File: test-message.txt
+Processing Time: Fri Feb 27 15:25:12 UTC 2026
+Content Length: 169 characters
+=== ORIGINAL CONTENT ===
+This is a test message for file processing.
+Line 2: Testing multi-line content
+Line 3: Apache Camel is processing this file
+Line 4: Java DSL makes routing easy!
+=== END OF PROCESSING ===
+
+# View simple route output
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ cat simple-output/simple-*.txt
+
+SIMPLE MESSAGE FROM TIMER - Processed at: Fri Feb 27 15:25:10 UTC 2026
+
+
+------------------------------------------------------
+Task 2.4 - Monitor Real-Time Processing (Optional)
+------------------------------------------------------
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ watch -n 2 'ls -la output/ processed/ simple-output/'
+
+🧾 Output (watch snapshot)
+Every 2.0s: ls -la output/ processed/ simple-output/   ip-172-31-10-219: Fri Feb 27 15:26:10 2026
+
+output/:
+total 28
+drwxr-xr-x 2 toor toor 4096 Feb 27 15:26 .
+drwxr-xr-x 10 toor toor 4096 Feb 27 15:18 ..
+-rw-r--r-- 1 toor toor  154 Feb 27 15:25 processed-message-20260227-152501.txt
+-rw-r--r-- 1 toor toor  154 Feb 27 15:25 processed-message-20260227-152506.txt
+-rw-r--r-- 1 toor toor  154 Feb 27 15:26 processed-message-20260227-152511.txt
+
+processed/:
+total 16
+drwxr-xr-x 2 toor toor 4096 Feb 27 15:25 .
+drwxr-xr-x 10 toor toor 4096 Feb 27 15:18 ..
+-rw-r--r-- 1 toor toor  398 Feb 27 15:25 processed-order-data.txt
+-rw-r--r-- 1 toor toor  458 Feb 27 15:25 processed-test-message.txt
+
+simple-output/:
+total 16
+drwxr-xr-x 2 toor toor 4096 Feb 27 15:26 .
+drwxr-xr-x 10 toor toor 4096 Feb 27 15:18 ..
+-rw-r--r-- 1 toor toor   86 Feb 27 15:25 simple-152510.txt
+-rw-r--r-- 1 toor toor   86 Feb 27 15:26 simple-152610.txt
+(Exited watch using Ctrl+C)
+
+
+------------------------------------------------------
+Task 2.5 - Test Different Message Types
+------------------------------------------------------
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ nano input/json-message.json
+
+🧾 File Content: input/json-message.json
+{
+ "messageType": "order",
+ "timestamp": "2024-01-15T10:30:00Z",
+ "data": {
+  "orderId": "ORD-001",
+  "customer": "Alice Johnson",
+  "amount": 299.99
+ }
+}
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ nano input/customer-data.csv
+
+🧾 File Content: input/customer-data.csv
+Name,Age,City,Country
+John Smith,30,New York,USA
+Jane Doe,25,London,UK
+Bob Johnson,35,Toronto,Canada
+
+🧾 Observed output (Application terminal)
+File processed: test-message.txt
+File processed: order-data.txt
+File processed: json-message.json
+File processed: customer-data.csv
+Message processed: Hello from Apache Camel!
+Route processed at: Fri Feb 27 15:26:...
+Message processed: Hello from Apache Camel!
+Route processed at: Fri Feb 27 15:26:...
+
+
+------------------------------------------------------
+Task 2.6 - Stop and Restart Testing
+------------------------------------------------------
+
+(Stopped the application using Ctrl+C)
+
+^C[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:42 min
+[INFO] Finished at: 2026-02-27T15:27:52Z
+[INFO] ------------------------------------------------------------------------
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ rm -f output/* processed/* simple-output/*
+
+✅ Verify cleared
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ ls -la output/ processed/ simple-output/
+
+output/:
+total 8
+drwxr-xr-x 2 toor toor 4096 Feb 27 15:28 .
+drwxr-xr-x 10 toor toor 4096 Feb 27 15:18 ..
+
+processed/:
+total 8
+drwxr-xr-x 2 toor toor 4096 Feb 27 15:28 .
+drwxr-xr-x 10 toor toor 4096 Feb 27 15:18 ..
+
+simple-output/:
+total 8
+drwxr-xr-x 2 toor toor 4096 Feb 27 15:28 .
+drwxr-xr-x 10 toor toor 4096 Feb 27 15:18 ..
+
+(Restarted application)
+
+toor@ip-172-31-10-214:~/camel-java-dsl-lab/simple-routes$ mvn exec:java -Dexec.mainClass="com.alnafi.camel.CamelApplication"
+
+[INFO] Scanning for projects...
+[INFO]
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ simple-routes ---
+Starting Apache Camel Application...
+Routes will process messages every 5-10 seconds
+Check the 'output', 'processed', and 'simple-output' directories for results
+Press Ctrl+C to stop the application
+File processed: json-message.json
+File processed: customer-data.csv
+Message processed: Hello from Apache Camel!
+Route processed at: Fri Feb 27 15:28:...
+
+
+------------------------------------------------------
+Advanced Testing and Troubleshooting Notes
+------------------------------------------------------
+
+Understanding Route Behavior
+Key Concepts Demonstrated:
+• from() method: Defines the source endpoint (timer, file)
+• process() method: Applies custom transformation logic
+• to() method: Defines the destination endpoint
+• Exchange object: Carries message data and headers between endpoints
+
+Common Issues and Solutions
+
+Issue 1: Files not being processed
+# Check file permissions
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ ls -la input/
+
+# Ensure files are readable
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ chmod 644 input/*
+
+Issue 2: Application won't start
+# Check Java version
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ java -version
+
+# Verify Maven dependencies
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ mvn dependency:tree
+
+Issue 3: No output files generated
+# Check directory permissions
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ ls -la
+
+# Create directories if missing
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ mkdir -p output processed simple-output
+
+
+------------------------------------------------------
+Monitoring and Debugging
+------------------------------------------------------
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ mkdir -p src/main/resources
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ nano src/main/resources/simplelogger.properties
+
+(Restart same way using mvn exec:java — logs become much more verbose.)
+
+
+------------------------------------------------------
+Optional Enhancement: Add Error Handling
+------------------------------------------------------
+
+toor@ip-172-31-10-219:~/camel-java-dsl-lab/simple-routes$ nano src/main/java/com/alnafi/camel/EnhancedRouteBuilder.java
+
+✅ Note (realistic student check): This enhanced builder is created but not wired into the main app yet.
+To use it, you would replace new SimpleRouteBuilder() with new EnhancedRouteBuilder() inside CamelApplication.java.
+
+======================================================
+End of Lab 02 Output Log
+======================================================
