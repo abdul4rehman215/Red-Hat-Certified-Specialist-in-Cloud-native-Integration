@@ -1,0 +1,521 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ----------------< com.example:camel-dynamic-routing >----------------
+[INFO] Building camel-dynamic-routing 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-dynamic-routing ---
+[INFO] Deleting /home/toor/camel-dynamic-routing/target
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ camel-dynamic-routing ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/toor/camel-dynamic-routing/src/main/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ camel-dynamic-routing ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /home/toor/camel-dynamic-routing/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.187 s
+[INFO] Finished at: 2026-02-27T13:41:22Z
+[INFO] ------------------------------------------------------------------------
+
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ----------------< com.example:camel-dynamic-routing >----------------
+[INFO] Building camel-dynamic-routing 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-dynamic-routing ---
+[com.example.routing.DynamicRoutingExample.main()] INFO org.apache.camel.main.MainSupport - Starting Camel (CamelContext: camel-1) is starting
+[com.example.routing.DynamicRoutingExample.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) is starting
+[com.example.routing.DynamicRoutingExample.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (total:10 started:10)
+[com.example.routing.DynamicRoutingExample.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route1 (jetty:http://localhost:8080/orders)
+[com.example.routing.DynamicRoutingExample.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route2 (jetty:http://localhost:8080/customers)
+[com.example.routing.DynamicRoutingExample.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) started in 1s212ms
+✅ Application is now running (keep this terminal open)
+
+Order processed successfully
+Order processed successfully
+Order processed successfully
+Customer request processed
+
+INFO  - Received order: {"orderId":"ORD001","priority":"HIGH","amount":1000}
+INFO  - Processing HIGH priority order
+INFO  - HIGH Priority: Expedited processing
+
+INFO  - Received customer request: {"customerId":"CUST001","customerType":"PREMIUM","name":"John Doe"}
+INFO  - Routing to premium customer service
+INFO  - Premium Service: VIP treatment
+
+[com.example.routing.DynamicRoutingExample.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) is shutting down
+[com.example.routing.DynamicRoutingExample.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes stopped (stopped:10)
+[com.example.routing.DynamicRoutingExample.main()] INFO org.apache.camel.main.MainSupport - Camel stopped!
+
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ----------------< com.example:camel-dynamic-routing >----------------
+[INFO] Building camel-dynamic-routing 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-dynamic-routing ---
+[INFO] Deleting /home/toor/camel-dynamic-routing/target
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ camel-dynamic-routing ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO]
+[INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ camel-dynamic-routing ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 3 source files to /home/toor/camel-dynamic-routing/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.933 s
+[INFO] Finished at: 2026-02-27T13:52:09Z
+[INFO] ------------------------------------------------------------------------
+
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ----------------< com.example:camel-dynamic-routing >----------------
+[INFO] Building camel-dynamic-routing 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-dynamic-routing ---
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.main.MainSupport - Starting Camel (CamelContext: camel-1) is starting
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) is starting
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (total:17 started:17)
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route1 (jetty:http://localhost:8080/products)
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route2 (jetty:http://localhost:8080/complex-orders)
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route3 (jetty:http://localhost:8080/time-sensitive)
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) started in 1s334ms
+✅ Advanced app running (keep Terminal 1 open)
+
+=== Testing Dynamic Routing with Camel ===
+
+1. Testing Basic Priority Routing...
+ - High Priority Order:
+No consumer available on endpoint: jetty://http://localhost:8080/orders. Exchange[].
+
+ - Medium Priority Order:
+No consumer available on endpoint: jetty://http://localhost:8080/orders. Exchange[].
+
+ - Low Priority Order:
+No consumer available on endpoint: jetty://http://localhost:8080/orders. Exchange[].
+
+2. Testing Category-based Routing...
+ - Electronics Product:
+Product order routed successfully
+
+ - Clothing Product:
+Product order routed successfully
+
+ - Books Product:
+Product order routed successfully
+
+3. Testing Complex Multi-criteria Routing...
+ - High Value Order:
+Complex order processed
+
+ - Standard Order:
+Complex order processed
+
+4. Testing Customer Type Routing...
+ - Premium Customer:
+No consumer available on endpoint: jetty://http://localhost:8080/customers. Exchange[].
+
+ - Standard Customer:
+No consumer available on endpoint: jetty://http://localhost:8080/customers. Exchange[].
+
+5. Testing Time-sensitive Routing...
+Time-sensitive request processed
+
+=== All tests completed ===
+
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) is shutting down
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes stopped (stopped:17)
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.main.MainSupport - Camel stopped!
+
+[INFO] Scanning for projects...
+[INFO] ----------------< com.example:camel-dynamic-routing >----------------
+[INFO] Building camel-dynamic-routing 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-dynamic-routing ---
+[INFO] Deleting /home/toor/camel-dynamic-routing/target
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ camel-dynamic-routing ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO]
+[INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ camel-dynamic-routing ---
+[INFO] Compiling 3 source files to /home/toor/camel-dynamic-routing/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-dynamic-routing ---
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.main.MainSupport - Starting Camel (CamelContext: camel-1) is starting
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) is starting
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (total:27 started:27)
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route1 (jetty:http://localhost:8080/orders)
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route2 (jetty:http://localhost:8080/customers)
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route3 (jetty:http://localhost:8080/products)
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route4 (jetty:http://localhost:8080/complex-orders)
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route5 (jetty:http://localhost:8080/time-sensitive)
+[com.example.routing.AdvancedDynamicRouting.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) started in 1s401ms
+
+=== Testing Dynamic Routing with Camel ===
+
+1. Testing Basic Priority Routing...
+ - High Priority Order:
+Order processed successfully
+
+ - Medium Priority Order:
+Order processed successfully
+
+ - Low Priority Order:
+Order processed successfully
+
+2. Testing Category-based Routing...
+ - Electronics Product:
+Product order routed successfully
+
+ - Clothing Product:
+Product order routed successfully
+
+ - Books Product:
+Product order routed successfully
+
+3. Testing Complex Multi-criteria Routing...
+ - High Value Order:
+Complex order processed
+
+ - Standard Order:
+Complex order processed
+
+4. Testing Customer Type Routing...
+ - Premium Customer:
+Customer request processed
+
+ - Standard Customer:
+Customer request processed
+
+5. Testing Time-sensitive Routing...
+Time-sensitive request processed
+
+=== All tests completed ===
+
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ----------------< com.example:camel-dynamic-routing >----------------
+[INFO] Building camel-dynamic-routing 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-dynamic-routing ---
+Starting performance test for dynamic routing...
+Order 0 processed successfully
+Product 0 processed successfully
+Complex order 0 processed successfully
+Order 1 processed successfully
+Product 1 processed successfully
+Complex order 1 processed successfully
+Order 2 processed successfully
+Product 2 processed successfully
+Complex order 2 processed successfully
+Order 3 processed successfully
+Product 3 processed successfully
+Complex order 3 processed successfully
+Order 4 processed successfully
+Product 4 processed successfully
+Complex order 4 processed successfully
+Order 5 processed successfully
+Product 5 processed successfully
+Complex order 5 processed successfully
+Order 6 processed successfully
+Product 6 processed successfully
+Complex order 6 processed successfully
+Order 7 processed successfully
+Product 7 processed successfully
+Complex order 7 processed successfully
+Order 8 processed successfully
+Product 8 processed successfully
+Complex order 8 processed successfully
+Order 9 processed successfully
+Product 9 processed successfully
+Complex order 9 processed successfully
+Order 10 processed successfully
+Product 10 processed successfully
+Complex order 10 processed successfully
+Order 11 processed successfully
+Product 11 processed successfully
+Complex order 11 processed successfully
+Order 12 processed successfully
+Product 12 processed successfully
+Complex order 12 processed successfully
+Order 13 processed successfully
+Product 13 processed successfully
+Complex order 13 processed successfully
+Order 14 processed successfully
+Product 14 processed successfully
+Complex order 14 processed successfully
+Order 15 processed successfully
+Product 15 processed successfully
+Complex order 15 processed successfully
+Order 16 processed successfully
+Product 16 processed successfully
+Complex order 16 processed successfully
+Order 17 processed successfully
+Product 17 processed successfully
+Complex order 17 processed successfully
+Order 18 processed successfully
+Product 18 processed successfully
+Complex order 18 processed successfully
+Order 19 processed successfully
+Product 19 processed successfully
+Complex order 19 processed successfully
+Order 20 processed successfully
+Product 20 processed successfully
+Complex order 20 processed successfully
+Order 21 processed successfully
+Product 21 processed successfully
+Complex order 21 processed successfully
+Order 22 processed successfully
+Product 22 processed successfully
+Complex order 22 processed successfully
+Order 23 processed successfully
+Product 23 processed successfully
+Complex order 23 processed successfully
+Order 24 processed successfully
+Product 24 processed successfully
+Complex order 24 processed successfully
+Order 25 processed successfully
+Product 25 processed successfully
+Complex order 25 processed successfully
+Order 26 processed successfully
+Product 26 processed successfully
+Complex order 26 processed successfully
+Order 27 processed successfully
+Product 27 processed successfully
+Complex order 27 processed successfully
+Order 28 processed successfully
+Product 28 processed successfully
+Complex order 28 processed successfully
+Order 29 processed successfully
+Product 29 processed successfully
+Complex order 29 processed successfully
+Order 30 processed successfully
+Product 30 processed successfully
+Complex order 30 processed successfully
+Order 31 processed successfully
+Product 31 processed successfully
+Complex order 31 processed successfully
+Order 32 processed successfully
+Product 32 processed successfully
+Complex order 32 processed successfully
+Order 33 processed successfully
+Product 33 processed successfully
+Complex order 33 processed successfully
+Order 34 processed successfully
+Product 34 processed successfully
+Complex order 34 processed successfully
+Order 35 processed successfully
+Product 35 processed successfully
+Complex order 35 processed successfully
+Order 36 processed successfully
+Product 36 processed successfully
+Complex order 36 processed successfully
+Order 37 processed successfully
+Product 37 processed successfully
+Complex order 37 processed successfully
+Order 38 processed successfully
+Product 38 processed successfully
+Complex order 38 processed successfully
+Order 39 processed successfully
+Product 39 processed successfully
+Complex order 39 processed successfully
+Order 40 processed successfully
+Product 40 processed successfully
+Complex order 40 processed successfully
+Order 41 processed successfully
+Product 41 processed successfully
+Complex order 41 processed successfully
+Order 42 processed successfully
+Product 42 processed successfully
+Complex order 42 processed successfully
+Order 43 processed successfully
+Product 43 processed successfully
+Complex order 43 processed successfully
+Order 44 processed successfully
+Product 44 processed successfully
+Complex order 44 processed successfully
+Order 45 processed successfully
+Product 45 processed successfully
+Complex order 45 processed successfully
+Order 46 processed successfully
+Product 46 processed successfully
+Complex order 46 processed successfully
+Order 47 processed successfully
+Product 47 processed successfully
+Complex order 47 processed successfully
+Order 48 processed successfully
+Product 48 processed successfully
+Complex order 48 processed successfully
+Order 49 processed successfully
+Product 49 processed successfully
+Complex order 49 processed successfully
+Order 50 processed successfully
+Product 50 processed successfully
+Complex order 50 processed successfully
+Order 51 processed successfully
+Product 51 processed successfully
+Complex order 51 processed successfully
+Order 52 processed successfully
+Product 52 processed successfully
+Complex order 52 processed successfully
+Order 53 processed successfully
+Product 53 processed successfully
+Complex order 53 processed successfully
+Order 54 processed successfully
+Product 54 processed successfully
+Complex order 54 processed successfully
+Order 55 processed successfully
+Product 55 processed successfully
+Complex order 55 processed successfully
+Order 56 processed successfully
+Product 56 processed successfully
+Complex order 56 processed successfully
+Order 57 processed successfully
+Product 57 processed successfully
+Complex order 57 processed successfully
+Order 58 processed successfully
+Product 58 processed successfully
+Complex order 58 processed successfully
+Order 59 processed successfully
+Product 59 processed successfully
+Complex order 59 processed successfully
+Order 60 processed successfully
+Product 60 processed successfully
+Complex order 60 processed successfully
+Order 61 processed successfully
+Product 61 processed successfully
+Complex order 61 processed successfully
+Order 62 processed successfully
+Product 62 processed successfully
+Complex order 62 processed successfully
+Order 63 processed successfully
+Product 63 processed successfully
+Complex order 63 processed successfully
+Order 64 processed successfully
+Product 64 processed successfully
+Complex order 64 processed successfully
+Order 65 processed successfully
+Product 65 processed successfully
+Complex order 65 processed successfully
+Order 66 processed successfully
+Product 66 processed successfully
+Complex order 66 processed successfully
+Order 67 processed successfully
+Product 67 processed successfully
+Complex order 67 processed successfully
+Order 68 processed successfully
+Product 68 processed successfully
+Complex order 68 processed successfully
+Order 69 processed successfully
+Product 69 processed successfully
+Complex order 69 processed successfully
+Order 70 processed successfully
+Product 70 processed successfully
+Complex order 70 processed successfully
+Order 71 processed successfully
+Product 71 processed successfully
+Complex order 71 processed successfully
+Order 72 processed successfully
+Product 72 processed successfully
+Complex order 72 processed successfully
+Order 73 processed successfully
+Product 73 processed successfully
+Complex order 73 processed successfully
+Order 74 processed successfully
+Product 74 processed successfully
+Complex order 74 processed successfully
+Order 75 processed successfully
+Product 75 processed successfully
+Complex order 75 processed successfully
+Order 76 processed successfully
+Product 76 processed successfully
+Complex order 76 processed successfully
+Order 77 processed successfully
+Product 77 processed successfully
+Complex order 77 processed successfully
+Order 78 processed successfully
+Product 78 processed successfully
+Complex order 78 processed successfully
+Order 79 processed successfully
+Product 79 processed successfully
+Complex order 79 processed successfully
+Order 80 processed successfully
+Product 80 processed successfully
+Complex order 80 processed successfully
+Order 81 processed successfully
+Product 81 processed successfully
+Complex order 81 processed successfully
+Order 82 processed successfully
+Product 82 processed successfully
+Complex order 82 processed successfully
+Order 83 processed successfully
+Product 83 processed successfully
+Complex order 83 processed successfully
+Order 84 processed successfully
+Product 84 processed successfully
+Complex order 84 processed successfully
+Order 85 processed successfully
+Product 85 processed successfully
+Complex order 85 processed successfully
+Order 86 processed successfully
+Product 86 processed successfully
+Complex order 86 processed successfully
+Order 87 processed successfully
+Product 87 processed successfully
+Complex order 87 processed successfully
+Order 88 processed successfully
+Product 88 processed successfully
+Complex order 88 processed successfully
+Order 89 processed successfully
+Product 89 processed successfully
+Complex order 89 processed successfully
+Order 90 processed successfully
+Product 90 processed successfully
+Complex order 90 processed successfully
+Order 91 processed successfully
+Product 91 processed successfully
+Complex order 91 processed successfully
+Order 92 processed successfully
+Product 92 processed successfully
+Complex order 92 processed successfully
+Order 93 processed successfully
+Product 93 processed successfully
+Complex order 93 processed successfully
+Order 94 processed successfully
+Product 94 processed successfully
+Complex order 94 processed successfully
+Order 95 processed successfully
+Product 95 processed successfully
+Complex order 95 processed successfully
+Order 96 processed successfully
+Product 96 processed successfully
+Complex order 96 processed successfully
+Order 97 processed successfully
+Product 97 processed successfully
+Complex order 97 processed successfully
+Order 98 processed successfully
+Product 98 processed successfully
+Complex order 98 processed successfully
+Order 99 processed successfully
+Product 99 processed successfully
+Complex order 99 processed successfully
+Performance test completed.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
