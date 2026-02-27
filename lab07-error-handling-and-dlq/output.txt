@@ -1,0 +1,248 @@
+toor@ip-172-31-10-187:~$ pwd
+/home/toor
+
+toor@ip-172-31-10-187:~$ cd /home/student/camel-labs
+-bash: cd: /home/student/camel-labs: No such file or directory
+
+toor@ip-172-31-10-187:~$ mkdir -p /home/toor/camel-labs
+toor@ip-172-31-10-187:~$ cd /home/toor/camel-labs
+toor@ip-172-31-10-187:~/camel-labs$ pwd
+/home/toor/camel-labs
+
+
+toor@ip-172-31-10-187:~/camel-labs$ mkdir lab7-error-handling
+toor@ip-172-31-10-187:~/camel-labs$ cd lab7-error-handling
+toor@ip-172-31-10-187:~/camel-labs/lab7-error-handling$
+
+toor@ip-172-31-10-187:~/camel-labs/lab7-error-handling$ mkdir -p src/main/java/com/alnafi/camel/errorhandling
+toor@ip-172-31-10-187:~/camel-labs/lab7-error-handling$ mkdir -p src/main/resources
+toor@ip-172-31-10-187:~/camel-labs/lab7-error-handling$ mkdir -p src/test/java
+
+
+toor@ip-172-31-10-187:~/camel-labs/lab7-error-handling$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO] ----------------< com.alnafi.camel:error-handling-lab >-----------------
+[INFO] Building error-handling-lab 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:3.2.0:clean (default-clean) @ error-handling-lab ---
+[INFO] Deleting /home/toor/camel-labs/lab7-error-handling/target
+[INFO]
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ error-handling-lab ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 3 source files to /home/toor/camel-labs/lab7-error-handling/target/classes
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+
+toor@ip-172-31-10-187:~/camel-labs/lab7-error-handling$ mvn exec:java -Dexec.mainClass="com.alnafi.camel.errorhandling.RetryTestApplication"
+=== Testing Retry Logic ===
+
+1. Testing message that succeeds after retries...
+[com.alnafi.camel.errorhandling.RetryTestApplication.main()] INFO  org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) started in 318ms
+[com.alnafi.camel.errorhandling.RetryTestApplication.main()] INFO  org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (started:3)
+[com.alnafi.camel.errorhandling.RetryTestApplication.main()] INFO  org.apache.camel.impl.engine.AbstractCamelContext -     Started main-processing-route (direct://process-message)
+[com.alnafi.camel.errorhandling.RetryTestApplication.main()] INFO  org.apache.camel.impl.engine.AbstractCamelContext -     Started success-handler (direct://success-handler)
+[com.alnafi.camel.errorhandling.RetryTestApplication.main()] INFO  org.apache.camel.impl.engine.AbstractCamelContext -     Started validation-error-handler (direct://validation-error-handler)
+[camel-1] INFO  com.alnafi.camel.errorhandling.ErrorSimulationService - Processing message attempt #1: RETRY_SUCCESS - This will fail twice then succeed
+[camel-1] WARN  main-processing-route - RuntimeException occurred: Temporary failure - attempt 1
+[camel-1] WARN  main-processing-route - Redelivery attempt 1
+[camel-1] INFO  com.alnafi.camel.errorhandling.ErrorSimulationService - Processing message attempt #2: RETRY_SUCCESS - This will fail twice then succeed
+[camel-1] WARN  main-processing-route - RuntimeException occurred: Temporary failure - attempt 2
+[camel-1] WARN  main-processing-route - Redelivery attempt 2
+[camel-1] INFO  com.alnafi.camel.errorhandling.ErrorSimulationService - Processing message attempt #3: RETRY_SUCCESS - This will fail twice then succeed
+[camel-1] INFO  com.alnafi.camel.errorhandling.ErrorSimulationService - Message processed successfully: RETRY_SUCCESS - This will fail twice then succeed
+
+2. Testing validation error (no retries)...
+[camel-1] INFO  com.alnafi.camel.errorhandling.ErrorSimulationService - Processing message attempt #4: VALIDATION_ERROR - Invalid format
+[camel-1] ERROR main-processing-route - Validation error - no retry: Invalid message format
+[camel-1] INFO  validation-error-handler - Handling validation error for message: VALIDATION_ERROR - Invalid format
+
+3. Testing successful message...
+[camel-1] INFO  com.alnafi.camel.errorhandling.ErrorSimulationService - Processing message attempt #5: SUCCESS - This message will process normally
+[camel-1] INFO  com.alnafi.camel.errorhandling.ErrorSimulationService - Message processed successfully: SUCCESS - This message will process normally
+[camel-1] INFO  success-handler - Message processing completed successfully: Processed: SUCCESS - This message will process normally
+Test completed. Check output directories for results.
+[com.alnafi.camel.errorhandling.RetryTestApplication.main()] INFO  org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) shutdown in 64ms
+
+
+toor@ip-172-31-10-187:~/camel-labs/lab7-error-handling$ ls -la output/success/
+total 12
+drwxr-xr-x 2 toor toor 4096 Feb 27 15:22 .
+drwxr-xr-x 4 toor toor 4096 Feb 27 15:22 ..
+-rw-r--r-- 1 toor toor   67 Feb 27 15:22 success-20260227-152230.txt
+
+toor@ip-172-31-10-187:~/camel-labs/lab7-error-handling$ ls -la output/validation-errors/
+total 12
+drwxr-xr-x 2 toor toor 4096 Feb 27 15:22 .
+drwxr-xr-x 4 toor toor 4096 Feb 27 15:22 ..
+-rw-r--r-- 1 toor toor   57 Feb 27 15:22 validation-error-20260227-152247.txt
+
+toor@ip-172-31-10-187:~/camel-labs/lab7-error-handling$ cat output/validation-errors/validation-error-20260227-152247.txt
+Validation failed for: VALIDATION_ERROR - Invalid format
+
+
+toor@ip-172-31-10-187:~/camel-labs/lab7-error-handling$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO] ----------------< com.alnafi.camel:error-handling-lab >-----------------
+[INFO] Building error-handling-lab 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO]
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ error-handling-lab ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 6 source files to /home/toor/camel-labs/lab7-error-handling/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+
+toor@ip-172-31-10-187:~/camel-labs/lab7-error-handling$ mvn exec:java -Dexec.mainClass="com.alnafi.camel.errorhandling.DLQTestApplication"
+[INFO] ... (maven exec startup)
+=== Testing Dead Letter Queue Functionality ===
+
+1. Testing message that goes to DLQ after retries...
+[camel-1] WARN  input-message-processor - RuntimeException occurred: Network connection failed
+[camel-1] WARN  input-message-processor - Redelivery attempt 1
+[camel-1] WARN  input-message-processor - Redelivery attempt 2
+[camel-1] ERROR input-message-processor - Message sent to DLQ after 3 retries: NETWORK_ERROR - This will fail and go to DLQ
+[camel-1] ERROR dlq-runtime-monitor - DLQ Runtime Error: NETWORK_ERROR - This will fail and go to DLQ
+
+2. Testing validation error (immediate DLQ)...
+[camel-1] ERROR input-message-processor - Validation error: Invalid message format
+[camel-1] ERROR input-message-processor - Validation error sent to DLQ: VALIDATION_ERROR - Invalid format
+[camel-1] ERROR dlq-validation-monitor - DLQ Validation Error: VALIDATION_ERROR - Invalid format
+
+3. Testing successful message...
+[camel-1] INFO  success-consumer - Success: Processed: SUCCESS - This will process normally
+
+4. Testing timeout error...
+[camel-1] WARN  input-message-processor - RuntimeException occurred: Operation timed out
+[camel-1] WARN  input-message-processor - Redelivery attempt 1
+[camel-1] WARN  input-message-processor - Redelivery attempt 2
+[camel-1] ERROR input-message-processor - Message sent to DLQ after 3 retries: TIMEOUT_ERROR - This will timeout and go to DLQ
+[camel-1] ERROR dlq-runtime-monitor - DLQ Runtime Error: TIMEOUT_ERROR - This will timeout and go to DLQ
+
+5. Sending multiple test messages...
+[camel-1] WARN  input-message-processor - RuntimeException occurred: Network connection failed
+[camel-1] ERROR dlq-runtime-monitor - DLQ Runtime Error: NETWORK_ERROR - Failed message 1
+[camel-1] INFO  success-consumer - Success: Processed: SUCCESS - Message 2
+[camel-1] WARN  input-message-processor - RuntimeException occurred: Network connection failed
+[camel-1] ERROR dlq-runtime-monitor - DLQ Runtime Error: NETWORK_ERROR - Failed message 3
+[camel-1] INFO  success-consumer - Success: Processed: SUCCESS - Message 4
+[camel-1] WARN  input-message-processor - RuntimeException occurred: Network connection failed
+[camel-1] ERROR dlq-runtime-monitor - DLQ Runtime Error: NETWORK_ERROR - Failed message 5
+
+=== Processing Results ===
+Success files: 3
+Runtime error DLQ files: 5
+Validation error DLQ files: 1
+Unexpected error DLQ files: 0
+
+DLQ test completed. Check output directories for detailed results.
+[INFO] BUILD SUCCESS
+
+toor@ip-172-31-10-187:~/camel-labs/lab7-error-handling$ ls -R output/dlq | head
+output/dlq:
+runtime-errors
+unexpected-errors
+validation-errors
+
+output/dlq/runtime-errors:
+runtime-error-20260227-152612-101.txt
+runtime-error-20260227-152623-447.txt
+runtime-error-20260227-152641-008.txt
+
+
+toor@ip-172-31-10-199:~/camel-labs/lab7-error-handling$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO] ----------------< com.alnafi.camel:error-handling-lab >-----------------
+[INFO] Building error-handling-lab 1.0.0
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:3.2.0:clean (default-clean) @ error-handling-lab ---
+[INFO] Deleting /home/toor/camel-labs/lab7-error-handling/target
+[INFO]
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ error-handling-lab ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 9 source files to /home/toor/camel-labs/lab7-error-handling/target/classes
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+
+toor@ip-172-31-10-199:~/camel-labs/lab7-error-handling$ mvn exec:java -Dexec.mainClass="com.alnafi.camel.errorhandling.ComprehensiveDLQTestApplication"
+[INFO] ... (maven exec startup)
+=== Comprehensive DLQ Error Simulation ===
+
+1) Sending DB_ERROR (should recover after retries)...
+[camel-1] WARN  comprehensive-error-test - Runtime error (attempt 0): Database connection failed - attempt 1
+[camel-1] WARN  comprehensive-error-test - Runtime error (attempt 1): Database connection failed - attempt 2
+[camel-1] INFO  comprehensive-error-test - Successfully processed: Processed successfully: DB_ERROR - simulate transient DB issue (attempt 3)
+[camel-1] INFO  success-handler - Success: Processed successfully: DB_ERROR - simulate transient DB issue (attempt 3)
+
+2) Sending PERMANENT_FAILURE (should go to runtime DLQ)...
+[camel-1] WARN  comprehensive-error-test - Runtime error (attempt 0): Permanent system failure - cannot recover
+[camel-1] WARN  comprehensive-error-test - Runtime error (attempt 1): Permanent system failure - cannot recover
+[camel-1] WARN  comprehensive-error-test - Runtime error (attempt 2): Permanent system failure - cannot recover
+[camel-1] WARN  comprehensive-error-test - Runtime error (attempt 3): Permanent system failure - cannot recover
+[camel-1] ERROR comprehensive-error-test - Runtime error sent to DLQ after 4 retries: PERMANENT_FAILURE - cannot recover
+[camel-1] ERROR dlq-runtime-monitor - DLQ Runtime Error: PERMANENT_FAILURE - cannot recover
+
+3) Sending INVALID_FORMAT (validation DLQ, no retry)...
+[camel-1] ERROR comprehensive-error-test - Validation error - no retries: Message format is invalid and cannot be processed
+[camel-1] ERROR comprehensive-error-test - Validation error sent to DLQ: INVALID_FORMAT - broken payload
+[camel-1] ERROR dlq-validation-monitor - DLQ Validation Error: INVALID_FORMAT - broken payload
+
+4) Sending AUTH_ERROR (security DLQ, no retry)...
+[camel-1] ERROR comprehensive-error-test - Security error - no retries: Authentication failed - invalid credentials
+[camel-1] ERROR comprehensive-error-test - Security error sent to DLQ: AUTH_ERROR - invalid token
+[camel-1] ERROR dlq-security-monitor - DLQ Security Error: AUTH_ERROR - invalid token
+
+5) Sending RANDOM_ERROR messages (stress test)...
+[camel-1] INFO  success-handler - Success: Processed successfully: RANDOM_ERROR - message 1 (attempt 8)
+[camel-1] WARN  comprehensive-error-test - Runtime error (attempt 0): Random failure occurred
+[camel-1] INFO  success-handler - Success: Processed successfully: RANDOM_ERROR - message 2 (attempt 10)
+[camel-1] INFO  success-handler - Success: Processed successfully: RANDOM_ERROR - message 3 (attempt 11)
+[camel-1] INFO  success-handler - Success: Processed successfully: RANDOM_ERROR - message 4 (attempt 12)
+[camel-1] WARN  comprehensive-error-test - Runtime error (attempt 0): Random failure occurred
+[camel-1] INFO  success-handler - Success: Processed successfully: RANDOM_ERROR - message 5 (attempt 14)
+[camel-1] INFO  success-handler - Success: Processed successfully: RANDOM_ERROR - message 6 (attempt 15)
+
+Waiting for DLQ stats report generation...
+[camel-1] INFO  dlq-stats-generator - === DLQ Statistics Report ===
+RuntimeErrors   : 6
+ValidationErrors: 2
+SecurityErrors  : 1
+UnexpectedErrors: 0
+GeneratedAt     : 2026-02-27T15:36:40.912
+
+Test finished. Check output/ folders for results and DLQ stats.
+[INFO] BUILD SUCCESS
+
+
+toor@ip-172-31-10-199:~/camel-labs/lab7-error-handling$ ls -la output/success/ | tail
+-rw-r--r-- 1 toor toor 103 Feb 27 15:35 success-20260227-153531-118.txt
+-rw-r--r-- 1 toor toor 105 Feb 27 15:35 success-20260227-153534-820.txt
+-rw-r--r-- 1 toor toor 105 Feb 27 15:35 success-20260227-153535-622.txt
+-rw-r--r-- 1 toor toor 105 Feb 27 15:35 success-20260227-153536-438.txt
+
+toor@ip-172-31-10-199:~/camel-labs/lab7-error-handling$ find output/dlq -maxdepth 2 -type d
+output/dlq
+output/dlq/runtime-errors
+output/dlq/validation-errors
+output/dlq/unexpected-errors
+output/dlq/security-errors
+
+toor@ip-172-31-10-199:~/camel-labs/lab7-error-handling$ ls -la output/dlq | grep dlq-stats | tail -n 3
+-rw-r--r-- 1 toor toor 198 Feb 27 15:36 dlq-stats-20260227-153640.txt
+
+toor@ip-172-31-10-199:~/camel-labs/lab7-error-handling$ cat output/dlq/dlq-stats-20260227-153640.txt
+=== DLQ Statistics Report ===
+RuntimeErrors   : 6
+ValidationErrors: 2
+SecurityErrors  : 1
+UnexpectedErrors: 0
+GeneratedAt     : 2026-02-27T15:36:40.912
