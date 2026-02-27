@@ -1,0 +1,16 @@
+# manifests/service-monitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: camel-service-monitor
+  namespace: camel-scaling-lab
+  labels:
+    app: scalable-camel-service
+spec:
+  selector:
+    matchLabels:
+      camel.apache.org/integration: scalable-camel-service
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
