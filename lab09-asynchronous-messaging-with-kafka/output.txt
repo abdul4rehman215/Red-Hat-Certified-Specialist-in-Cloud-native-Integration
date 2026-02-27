@@ -1,0 +1,248 @@
+toor@ip-172-31-10-232:~$ cd /opt/kafka
+toor@ip-172-31-10-232:/opt/kafka$ bin/zookeeper-server-start.sh config/zookeeper.properties &
+[1] 3128
+[2026-02-27 17:11:05,012] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
+[2026-02-27 17:11:05,019] INFO clientPortAddress is 0.0.0.0:2181 (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
+[2026-02-27 17:11:05,074] INFO Starting server (org.apache.zookeeper.server.ZooKeeperServerMain)
+[2026-02-27 17:11:05,119] INFO binding to port 0.0.0.0/0.0.0.0:2181 (org.apache.zookeeper.server.NIOServerCnxnFactory)
+
+toor@ip-172-31-10-232:/opt/kafka$ sleep 10
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-server-start.sh config/server.properties &
+[2] 3264
+[2026-02-27 17:11:18,807] INFO KafkaConfig values: ... (kafka.server.KafkaConfig)
+[2026-02-27 17:11:19,520] INFO [KafkaServer id=0] started (kafka.server.KafkaServer)
+
+toor@ip-172-31-10-232:/opt/kafka$ jps | grep -E "(Kafka|QuorumPeerMain)"
+3128 QuorumPeerMain
+3264 Kafka
+
+
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-topics.sh --create --topic order-events --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
+Created topic order-events.
+
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-topics.sh --create --topic notification-events --bootstrap-server localhost:9092 --partitions 2 --replication-factor 1
+Created topic notification-events.
+
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+__consumer_offsets
+notification-events
+order-events
+
+
+toor@ip-172-31-10-232:/opt/kafka$ cd ~/workspace
+-bash: cd: /home/toor/workspace: No such file or directory
+
+toor@ip-172-31-10-232:/opt/kafka$ mkdir -p ~/workspace
+toor@ip-172-31-10-232:/opt/kafka$ cd ~/workspace
+toor@ip-172-31-10-232:~/workspace$ pwd
+/home/toor/workspace
+
+
+toor@ip-172-31-10-232:~/workspace$ mvn archetype:generate -DgroupId=com.alnafi.kafka.lab \
+ -DartifactId=kafka-camel-integration \
+ -DarchetypeArtifactId=maven-archetype-quickstart \
+ -DinteractiveMode=false
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Maven Stub Project (No POM) 1
+[INFO] ------------------------------------------------------------------------
+[INFO] --- maven-archetype-plugin:3.2.1:generate (default-cli) @ standalone-pom ---
+[INFO] Generating project in Batch mode
+[INFO] ----------------------------------------------------------------------------
+[INFO] Using following parameters for creating project from Old (1.x) Archetype: maven-archetype-quickstart:1.0
+[INFO] ----------------------------------------------------------------------------
+[INFO] Parameter: groupId, Value: com.alnafi.kafka.lab
+[INFO] Parameter: artifactId, Value: kafka-camel-integration
+[INFO] Parameter: version, Value: 1.0-SNAPSHOT
+[INFO] Parameter: package, Value: com.alnafi.kafka.lab
+[INFO] ----------------------------------------------------------------------------
+[INFO] Project created from Archetype in dir: /home/toor/workspace/kafka-camel-integration
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+
+toor@ip-172-31-10-232:~/workspace$ cd kafka-camel-integration
+toor@ip-172-31-10-232:~/workspace/kafka-camel-integration$ ls -la
+total 12
+drwxr-xr-x 4 toor toor 4096 Feb 27 17:14 .
+drwxr-xr-x 3 toor toor 4096 Feb 27 17:14 ..
+-rw-r--r-- 1 toor toor  528 Feb 27 17:14 pom.xml
+drwxr-xr-x 4 toor toor 4096 Feb 27 17:14 src
+
+
+toor@ip-172-31-10-232:~/workspace/kafka-camel-integration$ mvn clean compile
+[INFO] Scanning for projects...
+[INFO] -------------< com.alnafi.kafka.lab:kafka-camel-integration >------------
+[INFO] Building kafka-camel-integration 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]--------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:3.2.0:clean (default-clean) @ kafka-camel-integration ---
+[INFO] Deleting /home/toor/workspace/kafka-camel-integration/target
+[INFO]
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ kafka-camel-integration ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 4 source files to /home/toor/workspace/kafka-camel-integration/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+
+toor@ip-172-31-10-232:~/workspace/kafka-camel-integration$ echo "Compilation status: $?"
+Compilation status: 0
+
+
+toor@ip-172-31-10-232:~/workspace/kafka-camel-integration$ mvn exec:java -Dexec.mainClass="com.alnafi.kafka.lab.KafkaCamelApplication"
+Starting Kafka-Camel Integration Application...
+Application started successfully!
+Producer will generate orders every 5 seconds
+Consumers are listening for messages
+Press Ctrl+C to stop the application
+2026-02-27 17:22:11 INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) started in 354ms
+
+2026-02-27 17:22:15 INFO order-producer-route - Generating new order...
+2026-02-27 17:22:15 INFO order-producer-route - Sending order to Kafka: {"orderId":"ORD1709054535123","customerId":"CUST001","productName":"Tablet","quantity":2,"price":742.11,"timestamp":"2026-02-27T17:22:15.123"}
+2026-02-27 17:22:15 INFO order-producer-route - Order sent successfully
+2026-02-27 17:22:15 INFO order-consumer-route - Received order from Kafka: {"orderId":"ORD1709054535123","customerId":"CUST001","productName":"Tablet","quantity":2,"price":742.11,"timestamp":"2026-02-27T17:22:15.123"}
+=== ORDER PROCESSED ===
+Order ID: ORD1709054535123
+Customer: CUST001
+Product: Tablet
+Quantity: 2
+Price: $742.11
+Timestamp: 2026-02-27T17:22:15.123
+========================
+2026-02-27 17:22:15 INFO high-value-order-processor - Processing high-value order: Order{orderId='ORD1709054535123', customerId='CUST001', productName='Tablet', quantity=2, price=742.11, timestamp='2026-02-27T17:22:15.123'}
+2026-02-27 17:22:15 INFO high-value-order-processor - High-value notification sent: HIGH VALUE ALERT: Order ORD1709054535123 for customer CUST001 - Amount: $742.11
+2026-02-27 17:22:15 INFO notification-consumer-route - Received notification: HIGH VALUE ALERT: Order ORD1709054535123 for customer CUST001 - Amount: $742.11
+*** NOTIFICATION ALERT ***
+Type: HIGH_VALUE
+Order ID: ORD1709054535123
+Message: HIGH VALUE ALERT: Order ORD1709054535123 for customer CUST001 - Amount: $742.11
+***************************
+2026-02-27 17:22:15 INFO customer-order-processor - VIP Customer order received: Order{orderId='ORD1709054535123', customerId='CUST001', productName='Tablet', quantity=2, price=742.11, timestamp='2026-02-27T17:22:15.123'}
+ VIP CUSTOMER ORDER 
+Applying 10% discount for CUST001
+New price: $667.90
+
+2026-02-27 17:22:20 INFO order-producer-route - Generating new order...
+2026-02-27 17:22:20 INFO order-producer-route - Sending order to Kafka: {"orderId":"ORD1709054540129","customerId":"CUST003","productName":"Monitor","quantity":1,"price":238.45,"timestamp":"2026-02-27T17:22:20.129"}
+2026-02-27 17:22:20 INFO order-producer-route - Order sent successfully
+2026-02-27 17:22:20 INFO order-consumer-route - Received order from Kafka: {"orderId":"ORD1709054540129","customerId":"CUST003","productName":"Monitor","quantity":1,"price":238.45,"timestamp":"2026-02-27T17:22:20.129"}
+=== ORDER PROCESSED ===
+Order ID: ORD1709054540129
+Customer: CUST003
+Product: Monitor
+Quantity: 1
+Price: $238.45
+Timestamp: 2026-02-27T17:22:20.129
+========================
+2026-02-27 17:22:20 INFO customer-order-processor - Regular customer order: CUST003
+
+
+toor@ip-172-31-10-232:~$ cd /opt/kafka
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-console-consumer.sh --topic order-events --from-beginning --bootstrap-server localhost:9092
+{"orderId":"ORD1709054535123","customerId":"CUST001","productName":"Tablet","quantity":2,"price":742.11,"timestamp":"2026-02-27T17:22:15.123"}
+{"orderId":"ORD1709054540129","customerId":"CUST003","productName":"Monitor","quantity":1,"price":238.45,"timestamp":"2026-02-27T17:22:20.129"}
+{"orderId":"ORD1709054545132","customerId":"CUST005","productName":"Laptop","quantity":3,"price":912.77,"timestamp":"2026-02-27T17:22:25.132"}
+
+toor@ip-172-31-10-232:~$ cd /opt/kafka
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-console-consumer.sh --topic notification-events --from-beginning --bootstrap-server localhost:9092
+HIGH VALUE ALERT: Order ORD1709054535123 for customer CUST001 - Amount: $742.11
+HIGH VALUE ALERT: Order ORD1709054545132 for customer CUST005 - Amount: $912.77
+
+
+toor@ip-172-31-10-232:~$ cd /opt/kafka
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-console-producer.sh --topic order-events --bootstrap-server localhost:9092
+>
+
+{"orderId":"TEST001","customerId":"CUST001","productName":"Test Product","quantity":2,"price":750.00,"timestamp":"2024-01-15T10:30:00"}
+{"orderId":"TEST002","customerId":"CUST003","productName":"Premium Laptop","quantity":1,"price":1200.00,"timestamp":"2024-01-15T10:31:00"}
+^C
+
+
+Running Camel app output after manual producer messages:
+2026-02-27 17:24:10 INFO order-consumer-route - Received order from Kafka: {"orderId":"TEST001","customerId":"CUST001","productName":"Test Product","quantity":2,"price":750.00,"timestamp":"2024-01-15T10:30:00"}
+=== ORDER PROCESSED ===
+Order ID: TEST001
+Customer: CUST001
+Product: Test Product
+Quantity: 2
+Price: $750.00
+Timestamp: 2024-01-15T10:30:00
+========================
+2026-02-27 17:24:10 INFO high-value-order-processor - Processing high-value order: Order{orderId='TEST001', customerId='CUST001', productName='Test Product', quantity=2, price=750.00, timestamp='2024-01-15T10:30:00'}
+2026-02-27 17:24:10 INFO high-value-order-processor - High-value notification sent: HIGH VALUE ALERT: Order TEST001 for customer CUST001 - Amount: $750.00
+2026-02-27 17:24:10 INFO notification-consumer-route - Received notification: HIGH VALUE ALERT: Order TEST001 for customer CUST001 - Amount: $750.00
+*** NOTIFICATION ALERT ***
+Type: HIGH_VALUE
+Order ID: TEST001
+Message: HIGH VALUE ALERT: Order TEST001 for customer CUST001 - Amount: $750.00
+***************************
+2026-02-27 17:24:10 INFO customer-order-processor - VIP Customer order received: Order{orderId='TEST001', customerId='CUST001', productName='Test Product', quantity=2, price=750.00, timestamp='2024-01-15T10:30:00'}
+ VIP CUSTOMER ORDER 
+Applying 10% discount for CUST001
+New price: $675.00
+
+2026-02-27 17:24:12 INFO order-consumer-route - Received order from Kafka: {"orderId":"TEST002","customerId":"CUST003","productName":"Premium Laptop","quantity":1,"price":1200.00,"timestamp":"2024-01-15T10:31:00"}
+=== ORDER PROCESSED ===
+Order ID: TEST002
+Customer: CUST003
+Product: Premium Laptop
+Quantity: 1
+Price: $1200.00
+Timestamp: 2024-01-15T10:31:00
+========================
+2026-02-27 17:24:12 INFO high-value-order-processor - Processing high-value order: Order{orderId='TEST002', customerId='CUST003', productName='Premium Laptop', quantity=1, price=1200.00, timestamp='2024-01-15T10:31:00'}
+2026-02-27 17:24:12 INFO high-value-order-processor - High-value notification sent: HIGH VALUE ALERT: Order TEST002 for customer CUST003 - Amount: $1200.00
+2026-02-27 17:24:12 INFO customer-order-processor - Regular customer order: CUST003
+
+
+toor@ip-172-31-10-232:~$ cd /opt/kafka
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
+customer-processor
+high-value-processor
+notification-processor
+order-logger
+
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group order-logger --describe
+GROUP           TOPIC         PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG   CONSUMER-ID                                   HOST            CLIENT-ID
+order-logger     order-events   0          18              18              0     consumer-order-logger-1-9a7d3b5d-...         /127.0.0.1      consumer-order-logger-1
+order-logger     order-events   1          17              17              0     consumer-order-logger-1-9a7d3b5d-...         /127.0.0.1      consumer-order-logger-1
+order-logger     order-events   2          16              16              0     consumer-order-logger-1-9a7d3b5d-...         /127.0.0.1      consumer-order-logger-1
+
+
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-server-stop.sh
+
+Camel app warnings after broker stop:
+2026-02-27 17:26:40 WARN org.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2026-02-27 17:26:41 WARN org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-order-logger-1, groupId=order-logger] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+2026-02-27 17:26:41 WARN org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-high-value-processor-1, groupId=high-value-processor] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Broker may not be available.
+
+
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-server-start.sh config/server.properties &
+[3] 4011
+[2026-02-27 17:26:55,208] INFO [KafkaServer id=0] started (kafka.server.KafkaServer)
+
+Camel app output after broker restart:
+2026-02-27 17:27:01 INFO order-producer-route - Generating new order...
+2026-02-27 17:27:01 INFO order-producer-route - Sending order to Kafka: {"orderId":"ORD1709054821123","customerId":"CUST004","productName":"Headphones","quantity":4,"price":612.34,"timestamp":"2026-02-27T17:27:01.123"}
+2026-02-27 17:27:01 INFO order-producer-route - Order sent successfully
+2026-02-27 17:27:01 INFO order-consumer-route - Received order from Kafka: {"orderId":"ORD1709054821123","customerId":"CUST004","productName":"Headphones","quantity":4,"price":612.34,"timestamp":"2026-02-27T17:27:01.123"}
+
+
+toor@ip-172-31-10-232:~$ cd /opt/kafka
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-topics.sh --describe --topic order-events --bootstrap-server localhost:9092
+Topic: order-events   TopicId: uCjF...  PartitionCount: 3  ReplicationFactor: 1  Configs: segment.bytes=1073741824
+    Topic: order-events   Partition: 0  Leader: 0  Replicas: 0  Isr: 0
+    Topic: order-events   Partition: 1  Leader: 0  Replicas: 0  Isr: 0
+    Topic: order-events   Partition: 2  Leader: 0  Replicas: 0  Isr: 0
+
+toor@ip-172-31-10-232:/opt/kafka$ bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group order-logger --describe
+GROUP        TOPIC        PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG  CONSUMER-ID                                  HOST        CLIENT-ID
+order-logger  order-events  0          25              25              0    consumer-order-logger-1-9a7d3b5d-...        /127.0.0.1  consumer-order-logger-1
+order-logger  order-events  1          24              24              0    consumer-order-logger-1-9a7d3b5d-...        /127.0.0.1  consumer-order-logger-1
+order-logger  order-events  2          23              23              0    consumer-order-logger-1-9a7d3b5d-...        /127.0.0.1  consumer-order-logger-1
+
+^C
+Application stopped.
