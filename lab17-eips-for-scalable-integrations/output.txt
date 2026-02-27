@@ -1,0 +1,234 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< org.apache.maven:standalone-pom >-------------------
+[INFO] Building Maven Stub Project (No POM) 1
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] >>> maven-archetype-plugin:3.2.1:generate (default-cli) > generate-sources @ standalone-pom >>>
+[INFO] 
+[INFO] <<< maven-archetype-plugin:3.2.1:generate (default-cli) < generate-sources @ standalone-pom <<<
+[INFO] 
+[INFO] Using following parameters for creating project from Old (1.x) Archetype: maven-archetype-quickstart:1.1
+[INFO] ----------------------------------------------------------------------------
+[INFO] Parameter: groupId, Value: com.alnafi.camel.eip
+[INFO] Parameter: artifactId, Value: camel-eip-patterns
+[INFO] Parameter: version, Value: 1.0-SNAPSHOT
+[INFO] Parameter: package, Value: com.alnafi.camel.eip
+[INFO] Parameter: packageInPathFormat, Value: com/alnafi/camel/eip
+[INFO] ----------------------------------------------------------------------------
+[INFO] Project created from Archetype in dir: /home/toor/camel-eip-lab/camel-eip-patterns
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  8.612 s
+[INFO] Finished at: 2026-02-27T15:06:34Z
+[INFO] ------------------------------------------------------------------------
+
+bash: code: command not found
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.alnafi.camel.eip:camel-eip-patterns >---------------
+[INFO] Building camel-eip-patterns 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-eip-patterns ---
+[INFO] Deleting /home/toor/camel-eip-lab/camel-eip-patterns/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ camel-eip-patterns ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-eip-patterns ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /home/toor/camel-eip-lab/camel-eip-patterns/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.945 s
+[INFO] Finished at: 2026-02-27T15:10:12Z
+[INFO] ------------------------------------------------------------------------
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.alnafi.camel.eip:camel-eip-patterns >---------------
+[INFO] Building camel-eip-patterns 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-eip-patterns ---
+[INFO] Deleting /home/toor/camel-eip-lab/camel-eip-patterns/target
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-eip-patterns ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 4 source files to /home/toor/camel-eip-lab/camel-eip-patterns/target/classes
+[INFO] 
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-eip-patterns ---
+Starting Splitter EIP Demo...
+The application will generate sample orders and split them into individual items.
+Press Ctrl+C to stop the application.
+[com.alnafi.camel.eip.SplitterApplication.main()] INFO org.apache.camel.main.MainSupport - Starting Camel (CamelContext: camel-1) is starting
+[com.alnafi.camel.eip.SplitterApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is starting
+[com.alnafi.camel.eip.SplitterApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (total:3 started:3)
+[com.alnafi.camel.eip.SplitterApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started order-generator (timer://orderGenerator)
+[com.alnafi.camel.eip.SplitterApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started order-splitter (direct://splitOrder)
+[com.alnafi.camel.eip.SplitterApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started item-processor (direct://processItem)
+[com.alnafi.camel.eip.SplitterApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) started in 1s112ms
+
+[order-generator] INFO order-generator - Generating sample order...
+[order-generator] INFO order-generator - Created order: {"orderId":"ORD-1709046801123","customerId":"CUST-001","items":[{"productId":"P001","productName":"Laptop","quantity":2,"price":999.99},{"productId":"P002","productName":"Mouse","quantity":3,"price":29.99},{"productId":"P003","productName":"Keyboard","quantity":2,"price":79.99},{"productId":"P004","productName":"Monitor","quantity":1,"price":299.99}]}
+[order-splitter] INFO order-splitter - Splitting order into individual items...
+[order-splitter] INFO order-splitter - Processing item: OrderItem{productId='P001', productName='Laptop', quantity=2, price=999.99}
+[order-splitter] INFO order-splitter - Processing item: OrderItem{productId='P002', productName='Mouse', quantity=3, price=29.99}
+[order-splitter] INFO order-splitter - Processing item: OrderItem{productId='P003', productName='Keyboard', quantity=2, price=79.99}
+[order-splitter] INFO order-splitter - Processing item: OrderItem{productId='P004', productName='Monitor', quantity=1, price=299.99}
+[item-processor] INFO item-processor - Processing individual item: P001
+[item-processor] INFO item-processor - Processing individual item: P002
+[item-processor] INFO item-processor - Processing individual item: P003
+[item-processor] INFO item-processor - Processing individual item: P004
+[order-splitter] INFO order-splitter - Order splitting completed
+
+[com.alnafi.camel.eip.SplitterApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is shutting down
+[com.alnafi.camel.eip.SplitterApplication.main()] INFO org.apache.camel.main.MainSupport - Camel stopped!
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.alnafi.camel.eip:camel-eip-patterns >---------------
+[INFO] Building camel-eip-patterns 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-eip-patterns ---
+[INFO] Deleting /home/toor/camel-eip-lab/camel-eip-patterns/target
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-eip-patterns ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 7 source files to /home/toor/camel-eip-lab/camel-eip-patterns/target/classes
+[INFO] 
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-eip-patterns ---
+Starting Splitter-Aggregator EIP Demo...
+The application will:
+1. Generate sample orders
+2. Split orders into individual items
+3. Process items individually
+4. Aggregate items back into complete orders
+Press Ctrl+C to stop the application.
+[SplitterAggregatorApplication.main()] INFO org.apache.camel.main.MainSupport - Starting Camel (CamelContext: camel-1) is starting
+[SplitterAggregatorApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is starting
+[SplitterAggregatorApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (total:5 started:5)
+[SplitterAggregatorApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started order-generator (timer://orderGenerator)
+[SplitterAggregatorApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started order-splitter (direct://splitOrder)
+[SplitterAggregatorApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started item-processor (direct://processItem)
+[SplitterAggregatorApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started item-aggregator (direct://aggregateItems)
+[SplitterAggregatorApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started order-finalizer (direct://finalizeOrder)
+[SplitterAggregatorApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) started in 1s201ms
+
+[order-generator] INFO order-generator - Generating sample order...
+[order-generator] INFO order-generator - Created order: {"orderId":"ORD-1709047120444","customerId":"CUST-001","items":[{"productId":"P001","productName":"Laptop","quantity":2,"price":999.99},{"productId":"P002","productName":"Mouse","quantity":3,"price":29.99},{"productId":"P003","productName":"Keyboard","quantity":2,"price":79.99},{"productId":"P004","productName":"Monitor","quantity":1,"price":299.99}]}
+[order-splitter] INFO order-splitter - Splitting order into individual items...
+[item-processor] INFO item-processor - Processing individual item: P001
+[item-processor] INFO item-processor - Processing individual item: P002
+[item-processor] INFO item-processor - Processing individual item: P003
+[item-processor] INFO item-processor - Processing individual item: P004
+[item-aggregator] INFO item-aggregator - Aggregating item: P001 for order: ORD-1709047120444
+[item-aggregator] INFO item-aggregator - Aggregating item: P002 for order: ORD-1709047120444
+[item-aggregator] INFO item-aggregator - Aggregating item: P003 for order: ORD-1709047120444
+[item-aggregator] INFO item-aggregator - Aggregating item: P004 for order: ORD-1709047120444
+[item-aggregator] INFO item-aggregator - Aggregation completed for order: ORD-1709047120444
+[order-finalizer] INFO order-finalizer - Finalizing aggregated order: ORD-1709047120444
+[order-finalizer] INFO com.alnafi.camel.eip.aggregator.AggregatorRoute - Applied 10% discount: $238.993
+[order-finalizer] INFO com.alnafi.camel.eip.aggregator.AggregatorRoute - Final order total with tax: $2317.36736
+
+[SplitterAggregatorApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is shutting down
+[SplitterAggregatorApplication.main()] INFO org.apache.camel.main.MainSupport - Camel stopped!
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.alnafi.camel.eip:camel-eip-patterns >---------------
+[INFO] Building camel-eip-patterns 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-eip-patterns ---
+[INFO] Deleting /home/toor/camel-eip-lab/camel-eip-patterns/target
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-eip-patterns ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 9 source files to /home/toor/camel-eip-lab/camel-eip-patterns/target/classes
+[INFO] 
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-eip-patterns ---
+================================================================================
+Starting Complete EIP Demo Application
+================================================================================
+This application demonstrates three key Enterprise Integration Patterns:
+1. SPLITTER: Divides large orders into individual items
+2. AGGREGATOR: Combines processed items back into complete orders
+3. RECIPIENT LIST: Routes orders to multiple systems dynamically
+
+Watch the logs to see the complete message flow:
+Order Generation → Splitting → Processing → Aggregation → Distribution
+
+Press Ctrl+C to stop the application.
+================================================================================
+[CompleteEIPApplication.main()] INFO org.apache.camel.main.MainSupport - Starting Camel (CamelContext: camel-1) is starting
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is starting
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (total:11 started:11)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started order-generator (timer://orderGenerator)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started order-splitter (direct://splitOrder)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started item-processor (direct://processItem)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started item-aggregator (direct://aggregateItems)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started order-finalizer (direct://finalizeOrder)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started recipient-list-router (direct://sendToRecipients)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started order-processing-system (direct://orderProcessing)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started inventory-update-system (direct://inventoryUpdate)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started shipping-arrangement-system (direct://shippingArrangement)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started finance-approval-system (direct://financeApproval)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started customer-notification-system (direct://customerNotification)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started analytics-processing-system (direct://analyticsProcessing)
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) started in 1s260ms
+
+[order-generator] INFO order-generator - Generating sample order...
+[order-generator] INFO order-generator - Created order: {"orderId":"ORD-1709047510199","customerId":"CUST-001","items":[{"productId":"P001","productName":"Laptop","quantity":2,"price":999.99},{"productId":"P002","productName":"Mouse","quantity":3,"price":29.99},{"productId":"P003","productName":"Keyboard","quantity":2,"price":79.99},{"productId":"P004","productName":"Monitor","quantity":1,"price":299.99}]}
+[item-aggregator] INFO item-aggregator - Aggregation completed for order: ORD-1709047510199
+Recipients for order ORD-1709047510199: direct:orderProcessing,direct:inventoryUpdate,direct:shippingArrangement,direct:financeApproval,direct:customerNotification,direct:analyticsProcessing
+[order-processing-system] INFO order-processing-system - ORDER PROCESSING: Processing order ORD-1709047510199
+[inventory-update-system] INFO inventory-update-system - INVENTORY: Updating inventory for order ORD-1709047510199
+[shipping-arrangement-system] INFO shipping-arrangement-system - SHIPPING: Arranging shipping for order ORD-1709047510199
+[finance-approval-system] INFO finance-approval-system - FINANCE: Processing finance approval for order ORD-1709047510199
+[customer-notification-system] INFO customer-notification-system - NOTIFICATION: Sending notification for order ORD-1709047510199
+[analytics-processing-system] INFO analytics-processing-system - ANALYTICS: Processing analytics data for order ORD-1709047510199
+
+[CompleteEIPApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is shutting down
+[CompleteEIPApplication.main()] INFO org.apache.camel.main.MainSupport - Camel stopped!
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.alnafi.camel.eip:camel-eip-patterns >---------------
+[INFO] Building camel-eip-patterns 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-eip-patterns ---
+[INFO] Deleting /home/toor/camel-eip-lab/camel-eip-patterns/target
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-eip-patterns ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 12 source files to /home/toor/camel-eip-lab/camel-eip-patterns/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+[INFO] --- exec-maven-plugin:3.1.0:java (default-cli) @ camel-eip-patterns ---
+Complete EIP + REST Demo started.
+Try:
+GET  http://localhost:8080/api/eip/sample
+POST http://localhost:8080/api/eip/order
+Press Ctrl+C to stop.
+[CompleteEIPRestApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is starting
+[CompleteEIPRestApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (total:14 started:14)
+[CompleteEIPRestApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route1 (rest://post:/api/eip/order)
+[CompleteEIPRestApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started route2 (rest://get:/api/eip/sample)
+[CompleteEIPRestApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) started in 1s356ms
+
+ORD-REST-1709047922011
+
+Order submitted for processing
+
+[CompleteEIPRestApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.2 (camel-1) is shutting down
+[CompleteEIPRestApplication.main()] INFO org.apache.camel.main.MainSupport - Camel stopped!
