@@ -1,0 +1,8 @@
+{
+ "orderId": "ORD003",
+ "priority": "LOW",
+ "amount": 100.0,
+ "category": "BOOKS",
+ "region": "EAST",
+ "customerType": "BASIC"
+}
