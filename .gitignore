@@ -1,0 +1,134 @@
+############################################
+# Java / Maven Build
+############################################
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.log
+
+# Maven metadata
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+# Maven wrapper (keep jar)
+.mvn/
+!.mvn/wrapper/maven-wrapper.jar
+
+############################################
+# IDE / Editor Files
+############################################
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+*.swo
+
+############################################
+# OS Files
+############################################
+.DS_Store
+Thumbs.db
+
+############################################
+# Runtime Logs / Temp Files
+############################################
+logs/
+*.out
+*.pid
+*.tmp
+nohup.out
+application.log
+metrics.log
+tmlog*
+transaction-logs/
+atomikos/
+checkpoint/
+*.trace
+
+############################################
+# ActiveMQ / JMS Runtime Data
+############################################
+activemq-data/
+data/
+kahadb/
+*.lock
+*.data
+
+############################################
+# Kafka / Zookeeper (if local)
+############################################
+kafka-logs/
+zookeeper-data/
+zookeeper/
+meta.properties
+
+############################################
+# Camel File Processing Runtime (Labs)
+############################################
+**/input/**
+**/output/**
+**/processed/**
+**/error/**
+**/dead-letter-queue/**
+**/validated-output/**
+
+# Lab 18 / file-heavy runtime directories
+**/ftp-*/
+**/sftp-*/
+**/sync-*/
+**/advanced-*/
+**/archive-*/
+**/large-files/**
+**/small-files/**
+**/text-files/**
+**/csv-files/**
+**/xml-files/**
+**/other-files/**
+**/monitored-*/
+
+# Lab 20 data directories
+**/data/input/**
+**/data/output/**
+**/data/processed/**
+**/data/error/**
+
+############################################
+# Test Reports / Coverage
+############################################
+surefire-reports/
+failsafe-reports/
+*.exec
+*.coverage
+**/*test-report*.txt
+**/*report*.txt
+
+############################################
+# Environment / Secrets (IMPORTANT)
+############################################
+.env
+*.env
+**/*secret*.properties
+**/database.properties
+application-secret.properties
+application-local.properties
+keystore.jks
+*.pem
+*.key
+
+############################################
+# OpenShift / Kubernetes Temp Files
+############################################
+*.yaml.bak
+kamel.tar.gz
