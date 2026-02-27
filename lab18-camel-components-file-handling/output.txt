@@ -1,0 +1,317 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.example:camel-file-handling >----------------
+[INFO] Building camel-file-handling 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ camel-file-handling ---
+[INFO] Deleting /home/toor/camel-file-handling-lab/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ camel-file-handling ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-file-handling ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to /home/toor/camel-file-handling-lab/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.912 s
+[INFO] Finished at: 2026-02-27T16:02:41Z
+[INFO] ------------------------------------------------------------------------
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.example:camel-file-handling >----------------
+[INFO] Building camel-file-handling 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- camel-maven-plugin:3.20.0:run (default-cli) @ camel-file-handling ---
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.main.MainSupport - Starting Camel (CamelContext: camel-1)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) is starting
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (total:1 started:1)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started file-processor (file://input)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) started in 794ms
+
+[file-processor] INFO file-processor - Processing file: test1.txt
+[file-processor] INFO file-processor - File processed successfully: test1.txt
+[file-processor] INFO file-processor - Processing file: test2.txt
+[file-processor] INFO file-processor - File processed successfully: test2.txt
+[file-processor] INFO file-processor - Processing file: test3.txt
+[file-processor] INFO file-processor - File processed successfully: test3.txt
+
+total 12
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:03 .
+drwxrwxr-x 8 toor toor 4096 Feb 27 16:03 ..
+-rw-rw-r-- 1 toor toor   49 Feb 27 16:03 test1.txt
+-rw-rw-r-- 1 toor toor   39 Feb 27 16:03 test2.txt
+-rw-rw-r-- 1 toor toor   32 Feb 27 16:03 test3.txt
+
+PROCESSED: HELLO WORLD FROM CAMEL FILE COMPONENT
+
+total 12
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:03 .
+drwxrwxr-x 8 toor toor 4096 Feb 27 16:03 ..
+-rw-rw-r-- 1 toor toor   38 Feb 27 16:02 test1.txt
+-rw-rw-r-- 1 toor toor   34 Feb 27 16:02 test2.txt
+-rw-rw-r-- 1 toor toor   30 Feb 27 16:02 test3.txt
+
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) is shutting down
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.main.MainSupport - Camel stopped!
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:3 http://security.ubuntu.com/ubuntu noble-security InRelease
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+12 packages can be upgraded. Run 'apt list --upgradable' to see them.
+
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  vsftpd
+0 upgraded, 1 newly installed, 0 to remove and 12 not upgraded.
+Need to get 0 B/178 kB of archives.
+After this operation, 512 kB of additional disk space will be used.
+Selecting previously unselected package vsftpd.
+(Reading database ... 72184 files and directories currently installed.)
+Preparing to unpack .../vsftpd_3.0.5-1ubuntu1_amd64.deb ...
+Unpacking vsftpd (3.0.5-1ubuntu1) ...
+Setting up vsftpd (3.0.5-1ubuntu1) ...
+Created symlink /etc/systemd/system/multi-user.target.wants/vsftpd.service → /usr/lib/systemd/system/vsftpd.service.
+
+Synchronizing state of vsftpd.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable vsftpd
+
+[INFO] Scanning for projects...
+[INFO] ---------------< com.example:camel-file-handling >----------------
+[INFO] Building camel-file-handling 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-file-handling ---
+[INFO] Compiling 3 source files to /home/toor/camel-file-handling-lab/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+
+[INFO] --- camel-maven-plugin:3.20.0:run (default-cli) @ camel-file-handling ---
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) is starting
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (total:6 started:6)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started file-processor (file://input)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started ftp-upload-route (file://ftp-upload)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started ftp-download-route (ftp://ftpuser@localhost:21/download)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started sftp-upload-route (file://sftp-upload)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started sftp-download-route (sftp://sftpuser@localhost:22/download)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started file-sync-route (file://sync-source)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Apache Camel 3.20.0 (camel-1) started in 1s041ms
+
+total 8
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:16 .
+drwxrwxr-x 14 toor toor 4096 Feb 27 16:15 ..
+-rw-rw-r-- 1 toor toor   36 Feb 27 16:16 basic-test.txt
+-rw-rw-r-- 1 toor toor   28 Feb 27 16:16 basic-test2.txt
+
+total 8
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:16 .
+drwxrwxr-x 14 toor toor 4096 Feb 27 16:15 ..
+-rw-rw-r-- 1 toor toor   26 Feb 27 16:15 basic-test.txt
+-rw-rw-r-- 1 toor toor   18 Feb 27 16:15 basic-test2.txt
+
+total 8
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:18 .
+drwxrwxr-x 14 toor toor 4096 Feb 27 16:15 ..
+-rw-rw-r-- 1 toor toor   21 Feb 27 16:17 ftp-test1.txt
+-rw-rw-r-- 1 toor toor   16 Feb 27 16:17 ftp-test2.txt
+
+Connected to localhost.
+220 (vsFTPd 3.0.5)
+Name (localhost:toor): ftpuser
+331 Please specify the password.
+Password:
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp>
+250 Directory successfully changed.
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+-rw-r--r--    1 1001     1001           21 Feb 27 16:17 ftp-test1.txt
+-rw-r--r--    1 1001     1001           16 Feb 27 16:17 ftp-test2.txt
+226 Directory send OK.
+221 Goodbye.
+
+total 8
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:20 .
+drwxrwxr-x 14 toor toor 4096 Feb 27 16:15 ..
+-rw-rw-r-- 1 toor toor   23 Feb 27 16:20 ftp-download-test.txt
+
+total 8
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:22 .
+drwxrwxr-x 14 toor toor 4096 Feb 27 16:15 ..
+-rw-rw-r-- 1 toor toor   21 Feb 27 16:21 sftp-test1.txt
+-rw-rw-r-- 1 toor toor   18 Feb 27 16:21 sftp-test2.txt
+
+The authenticity of host 'localhost (127.0.0.1)' can't be established.
+ED25519 key fingerprint is SHA256:3Pqz8dKf7r1gZ1z3o3V8b+q5Jm9o1uYwqkX8v0K2p2k.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'localhost' (ED25519) to the list of known hosts.
+sftpuser@localhost's password: 
+Connected to localhost.
+sftp>
+sftp-test1.txt   sftp-test2.txt
+
+total 8
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:25 .
+drwxrwxr-x 14 toor toor 4096 Feb 27 16:15 ..
+-rw-rw-r-- 1 toor toor   24 Feb 27 16:25 sftp-download-test.txt
+
+total 8
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:27 .
+drwxrwxr-x 14 toor toor 4096 Feb 27 16:15 ..
+-rw-rw-r-- 1 toor toor   17 Feb 27 16:26 sync-test1.txt
+-rw-rw-r-- 1 toor toor   17 Feb 27 16:26 sync-test2.txt
+
+total 8
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:27 .
+drwxrwxr-x 14 toor toor 4096 Feb 27 16:15 ..
+-rw-rw-r-- 1 toor toor   17 Feb 27 16:26 sync-test1.txt
+-rw-rw-r-- 1 toor toor   17 Feb 27 16:26 sync-test2.txt
+
+Connected to localhost.
+220 (vsFTPd 3.0.5)
+Name (localhost:toor): ftpuser
+331 Please specify the password.
+Password:
+230 Login successful.
+ftp>
+250 Directory successfully changed.
+150 Here comes the directory listing.
+-rw-r--r--    1 1001     1001           17 Feb 27 16:26 sync-test1.txt
+-rw-r--r--    1 1001     1001           17 Feb 27 16:26 sync-test2.txt
+226 Directory send OK.
+221 Goodbye.
+
+sftpuser@localhost's password:
+Connected to localhost.
+sftp>
+sftp-test1.txt   sftp-test2.txt   sync-test1.txt   sync-test2.txt
+
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.main.MainSupport - Camel stopped!
+
+[INFO] --- camel-maven-plugin:3.20.0:run (default-cli) @ camel-file-handling ---
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (total:9 started:9)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started content-based-routing (file://advanced-input)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started size-based-routing (file://size-input)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started extension-based-routing (file://extension-input)
+
+2+0 records in
+2+0 records out
+2048 bytes (2.0 kB, 2.0 KiB) copied, 0.002189 s, 936 kB/s
+
+archive-output/:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:40 .
+drwxrwxr-x 22 toor toor 4096 Feb 27 16:39 ..
+-rw-rw-r-- 1 toor toor   28 Feb 27 16:39 archive-file.txt
+
+regular-output/:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:40 .
+drwxrwxr-x 22 toor toor 4096 Feb 27 16:39 ..
+-rw-rw-r-- 1 toor toor   24 Feb 27 16:39 regular-file.txt
+
+urgent-output/:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:40 .
+drwxrwxr-x 22 toor toor 4096 Feb 27 16:39 ..
+-rw-rw-r-- 1 toor toor   29 Feb 27 16:39 urgent-file.txt
+
+large-files/:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:40 .
+drwxrwxr-x 22 toor toor 4096 Feb 27 16:39 ..
+-rw-rw-r-- 1 toor toor 2048 Feb 27 16:39 large.txt
+
+small-files/:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:40 .
+drwxrwxr-x 22 toor toor 4096 Feb 27 16:39 ..
+-rw-rw-r-- 1 toor toor   19 Feb 27 16:39 small.txt
+
+text-files/:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:40 .
+drwxrwxr-x 22 toor toor 4096 Feb 27 16:39 ..
+-rw-rw-r-- 1 toor toor   13 Feb 27 16:39 test.txt
+
+csv-files/:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:40 .
+drwxrwxr-x 22 toor toor 4096 Feb 27 16:39 ..
+-rw-rw-r-- 1 toor toor   14 Feb 27 16:39 data.csv
+
+xml-files/:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:40 .
+drwxrwxr-x 22 toor toor 4096 Feb 27 16:39 ..
+-rw-rw-r-- 1 toor toor   31 Feb 27 16:39 config.xml
+
+other-files/:
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:40 .
+drwxrwxr-x 22 toor toor 4096 Feb 27 16:39 ..
+-rw-rw-r-- 1 toor toor   11 Feb 27 16:39 file.bin
+
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.main.MainSupport - Camel stopped!
+
+[INFO] ---------------< com.example:camel-file-handling >----------------
+[INFO] Building camel-file-handling 1.0.0
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ camel-file-handling ---
+[INFO] Compiling 5 source files to /home/toor/camel-file-handling-lab/target/classes
+[INFO] BUILD SUCCESS
+
+[INFO] --- camel-maven-plugin:3.20.0:run (default-cli) @ camel-file-handling ---
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext - Routes startup (total:11 started:11)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started monitored-file-processing (file://monitored-input)
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.impl.engine.AbstractCamelContext -     Started statistics-route (timer://stats)
+
+total 4
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:52 .
+drwxrwxr-x 28 toor toor 4096 Feb 27 16:50 ..
+-rw-rw-r-- 1 toor toor   17 Feb 27 16:51 valid-file.txt
+
+total 8
+drwxrwxr-x 2 toor toor 4096 Feb 27 16:52 .
+drwxrwxr-x 28 toor toor 4096 Feb 27 16:50 ..
+-rw-rw-r-- 1 toor toor    0 Feb 27 16:51 empty-file.txt
+-rw-rw-r-- 1 toor toor   13 Feb 27 16:51 invalid-filename.txt
+
+[monitored-file-processing] INFO monitored-file-processing - Processing monitored file: valid-file.txt
+[monitored-file-processing] INFO monitored-file-processing - File validated and processed: valid-file.txt
+[monitored-file-processing] WARN ... Redelivery attempt: 1 due to File is empty: empty-file.txt
+[monitored-file-processing] WARN ... Redelivery attempt: 2 due to File is empty: empty-file.txt
+[monitored-file-processing] WARN ... Redelivery attempt: 3 due to File is empty: empty-file.txt
+[statistics-route] INFO statistics-route - File Processing Statistics:
+- Input files pending: 0
+- Output files created: 2
+- Files processed: 7
+- Error files: 0
+- Timestamp: 2026-02-27T16:52:01.114
+
+[com.example.camel.FileHandlingApplication.main()] INFO org.apache.camel.main.MainSupport - Camel stopped!
+
+● vsftpd.service - vsftpd FTP server
+     Loaded: loaded (/usr/lib/systemd/system/vsftpd.service; enabled; preset: enabled)
+     Active: active (running) since Fri 2026-02-27 16:11:08 UTC; 41min ago
+   Main PID: 2147 (vsftpd)
+      Tasks: 1 (limit: 2246)
+     Memory: 1.6M
+        CPU: 58ms
+     CGroup: /system.slice/vsftpd.service
+             └─2147 /usr/sbin/vsftpd /etc/vsftpd.conf
