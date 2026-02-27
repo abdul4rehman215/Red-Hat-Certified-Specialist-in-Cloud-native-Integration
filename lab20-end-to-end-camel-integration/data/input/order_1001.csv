@@ -1,0 +1,4 @@
+order_number,customer_code,product_code,quantity,unit_price
+1001,CUST001,PROD001,2,29.99
+1001,CUST001,PROD002,1,49.99
+1001,CUST001,PROD003,1,79.99
