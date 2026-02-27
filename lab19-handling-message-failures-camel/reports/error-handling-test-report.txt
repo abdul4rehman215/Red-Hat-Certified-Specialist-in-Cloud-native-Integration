@@ -1,0 +1,55 @@
+=== CAMEL ERROR HANDLING LAB TEST REPORT ===
+Generated on: Fri Feb 27 17:49:13 UTC 2026
+=========================================
+
+=== CONFIGURATION SUMMARY ===
+- Retry Strategy: Max 3 retries, 2 second delay
+- DLQ Strategy: Max 2 retries, 1 second delay
+- Fallback Strategy: Immediate fallback on failure
+- Advanced Handling: Exception-specific routing
+
+=== PROCESSING RESULTS ===
+=== Error Handling Performance Analysis ===
+Analysis timestamp: Fri Feb 27 17:49:13 UTC 2026
+
+Retry Strategy:
+ Successfully processed: 13 messages
+
+Dead Letter Queue Strategy:
+ Successfully processed: 4 messages
+ Failed (sent to DLQ): 9 messages
+ Success rate: 30.77%
+
+Fallback Strategy:
+ Primary processing: 5 messages
+ Fallback processing: 6 messages
+ Primary success rate: 45.45%
+
+Advanced Error Handling:
+ Successful processing: 6 messages
+ Validation errors: 6 messages
+ Runtime errors: 1 messages
+ General errors: 4 messages
+
+Total messages processed across all strategies: 54
+
+=== ERROR PATTERNS ANALYSIS ===
+Retry attempts found:
+18
+
+DLQ routing events:
+9
+
+Fallback processing events:
+6
+
+=== SAMPLE ERROR MESSAGES ===
+Recent error log entries:
+[WARN ] ... Redelivery attempt: 2 due to Simulated runtime exception for message: Retry load test message 9 - Fri Feb 27 17:46:55 UTC 2026
+[ERROR] ... Exhausted after delivery attempt: 3 caught: java.lang.Exception: Simulated general exception for message: DLQ load test message 10 - Fri Feb 27 17:46:59 UTC 2026
+
+=== RECOMMENDATIONS ===
+1. Monitor DLQ messages regularly for business impact
+2. Adjust retry delays based on downstream system capabilities
+3. Implement alerting for high failure rates
+4. Consider circuit breaker patterns for external dependencies
