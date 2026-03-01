@@ -41,7 +41,7 @@
 
 <!-- ===================== REPO METADATA ===================== -->
 ![RepoSize](https://img.shields.io/github/repo-size/abdul4rehman215/Red-Hat-Certified-Specialist-in-Cloud-native-Integration?style=for-the-badge)
-![Stars](https://img.shields.io/github/stars/abdul4rehman215/Red-Hat-Certified-Specialist-in-Cloud-native-Integrationstyle=for-the-badge)
+![Stars](https://img.shields.io/github/stars/abdul4rehman215/Red-Hat-Certified-Specialist-in-Cloud-native-Integration?style=for-the-badge)
 ![Forks](https://img.shields.io/github/forks/abdul4rehman215/Red-Hat-Certified-Specialist-in-Cloud-native-Integration?style=for-the-badge)
 ![LastCommit](https://img.shields.io/github/last-commit/abdul4rehman215/Red-Hat-Certified-Specialist-in-Cloud-native-Integration?style=for-the-badge)
 
