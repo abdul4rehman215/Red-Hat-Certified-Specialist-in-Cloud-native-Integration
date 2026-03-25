@@ -158,7 +158,7 @@ Each lab is execution-focused and includes:
 |  09 | [Asynchronous Messaging with Kafka](./lab09-asynchronous-messaging-with-kafka)       | topics/partitions + consumer groups + event filtering       |
 |  10 | [Configuring Distributed Transactions](./lab10-configuring-distributed-transactions) | XA/JTA with Atomikos across JMS + DB + audit proof          |
 
-** 🧠 Skills Demonstrated**
+**🧠 Skills Demonstrated**
 
 * Unit + integration testing strategy for routes
 * Reliability engineering: retry, exponential backoff, DLQ routing
@@ -186,7 +186,7 @@ Each lab is execution-focused and includes:
 |  14 | [Building a Scalable Camel Route in OpenShift](./lab14-building-a-scalable-camel-route-in-openshift) | metrics + HPA + load testing + validation     |
 |  15 | [Implementing API Gateway Pattern](./lab15-implementing-api-gateway-pattern-with-camel)              | security + RBAC + throttling + aggregation    |
 
-** 🧠 Skills Demonstrated**
+**🧠 Skills Demonstrated**
 
 * REST API engineering with production error handling
 * External API integration + transformation + health monitoring
@@ -214,7 +214,7 @@ Each lab is execution-focused and includes:
 |  19 | [Handling Message Failures](./lab19-handling-message-failures-camel)       | retry + DLQ + fallback + exception-specific handling + reports      |
 |  20 | [End-to-End Camel Integration](./lab20-end-to-end-camel-integration)       | File → DB → REST → routing → persistence → reporting (+ resilience) |
 
-** 🧠 Skills Demonstrated**
+**🧠 Skills Demonstrated**
 
 * Dynamic endpoint selection (recipientList) + multi-criteria routing
 * High-volume EIPs: streaming split, parallel processing, controlled aggregation
