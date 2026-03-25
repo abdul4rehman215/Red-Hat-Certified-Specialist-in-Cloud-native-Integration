@@ -129,7 +129,7 @@ Each lab is execution-focused and includes:
 |  04 | [Implementing Custom Processors](./lab04-implementing-custom-processors)                 | Processor design + enrichment + testability             |
 |  05 | [Enterprise Integration Patterns (EIPs)](./lab05-enterprise-integration-patterns)        | Content-based routing + Splitter + Aggregation + REST   |
 
-** 🧠 Skills Demonstrated**
+**🧠 Skills Demonstrated**
 
 * Java DSL + XML DSL routing
 * Custom processors (transformation + enrichment)
