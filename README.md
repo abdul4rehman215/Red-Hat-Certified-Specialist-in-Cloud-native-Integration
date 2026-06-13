@@ -590,6 +590,14 @@ These patterns are intended for legitimate enterprise integration engineering, s
 
 ---
 
+## 🌐 Labs Portfolio Post on LinkedIn
+
+I also shared this Lab series Portfolio on LinkedIn with a concise portfolio summary, key highlights, and implementation context.
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-View%20Project%20Post-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)]()
+
+---
+
 ## ⭐ Final Note
 
 This repository reflects **real, execution-driven integration engineering** — not isolated routing demos.
